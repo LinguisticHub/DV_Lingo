@@ -1,532 +1,337 @@
 <!DOCTYPE html>
-<html lang="en">
+<html class="wow-animation" lang="en">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Manage Your Class</title>
-
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
-
+  <title>DV Lingo - Learn. Connect. Belong.</title>
+  <meta charset="utf-8">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="viewport"
+    content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+  <meta name="keywords" content="english, indonesian, language class, tutor, learn">
+  <meta name="date" content="Dec 26">
+  <link rel="icon" href="images/logo.png" type="image/png">
+  <link rel="stylesheet" type="text/css"
+    href="//fonts.googleapis.com/css?family=Ubuntu:400,400italic,500,700,700italic">
+  <link rel="stylesheet" href="css/style.css">
   <style>
-    :root {
-      --primary-color: #4A90E2;
-      --primary-light: #71AEEE;
-      --primary-dark:  #357ABD;
-      --background-color: #f4f6f8;
-      --highlight-bg: rgba(224, 227, 231, 0.6);
-      --card-bg: rgba(255, 255, 255, 0.6);
-      --text-color: #333;
-      --shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-    }
-
-    html { scroll-behavior: smooth; }
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: 'Open Sans', sans-serif;
-      background: radial-gradient(circle at top left, rgba(74,144,226,0.1) 0%, rgba(244,246,248,1) 80%);
-      color: var(--text-color);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-    }
-
-    .page-wrapper {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      width: 100%;
-    }
-
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    header {
-      width: 100%;
+    .ie-panel {
+      display: none;
+      background: #212121;
+      padding: 10px 0;
+      box-shadow: 3px 3px 5px 0 rgba(0, 0, 0, .3);
+      clear: both;
       text-align: center;
-      padding: 40px 20px 30px;
-      background: linear-gradient(to right, var(--primary-color), var(--primary-light));
-      color: white;
       position: relative;
-      opacity: 0;
-      animation: fadeInUp 0.8s ease-out forwards;
-      animation-delay: 0.2s;
+      z-index: 1;
     }
 
-    .free-button-wrapper {
-      display: flex;
-      justify-content: center;
-      margin-bottom: 20px;
+    html.ie-10 .ie-panel,
+    html.lt-ie-10 .ie-panel {
+      display: block;
     }
 
-    .free-classes-button {
-      background-color: white;
-      color: var(--primary-color);
-      font-weight: 600;
-      padding: 10px 16px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 14px;
-      transition: background-color 0.3s, transform 0.2s;
-      box-shadow: var(--shadow);
-      text-decoration: none;
+    /* Custom overrides */
+    .context-dark.bg-danger {
+      background-color: #4A90E2 !important;
     }
 
-    .free-classes-button:hover {
-      background-color: var(--primary-light);
-      transform: translateY(-1px);
+    /* Primary Blue */
+    .btn-danger {
+      background-color: #FF8C00;
+      border-color: #FF8C00;
     }
 
-    .profile-container {
-      position: relative;
-      display: inline-block;
+    /* Accent Orange */
+    .btn-danger:hover {
+      background-color: #FF6600;
+      border-color: #FF6600;
     }
 
-    .profile {
-      width: 160px;
-      height: 160px;
-      object-fit: cover;
-      border-radius: 50%;
-      border: 6px solid white;
-      box-shadow: var(--shadow);
-    }
-
-    .play-button {
-      position: absolute;
-      top: 5px;
-      right: 5px;
-      width: 40px;
-      height: 40px;
-    }
-
-    .play-button img {
-      width: 100%;
-      height: auto;
-      cursor: pointer;
-      transition: transform 0.2s ease;
-    }
-
-    .play-button img:hover {
-      transform: scale(1.1);
-    }
-
-    .dv-lingo-logo {
-      position: absolute;
-      bottom: 0;
-      left: 50%;
-      transform: translate(-50%, 10%);
-      width: 80px;
-      height: auto;
-      border: 2px solid rgb(255,192,0);
-      border-radius: 6px;
-      pointer-events: none;
-    }
-
-    .profile-and-social {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 24px;
-    }
-
-    header h1, header h2 {
-      font-family: 'Montserrat', sans-serif;
-    }
-
-    header h1 {
-      font-size: 32px;
-      margin: 25px 0 10px;
-    }
-
-    .social-box {
-      padding: 10px 26px;
-      background-color: transparent;
-      border-radius: 10px;
-      box-shadow: var(--shadow);
-      display: inline-flex;
-      justify-content: center;
-      gap: 14px;
-      align-items: center;
-    }
-
-    .social-box a img {
-      width: 21px;
-      height: 21px;
-      transition: transform 0.2s;
-    }
-
-    .social-box a img:hover {
-      transform: rotate(10deg);
-    }
-
-    .card {
-      position: relative;
-      background: var(--card-bg);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255,255,255,0.3);
-      border-radius: 12px;
-      padding: 30px;
-      margin-top: 40px;
-      box-shadow: var(--shadow);
-      width: 90%;
-      max-width: 600px;
-      text-align: center;
-      opacity: 0;
-      animation: fadeInUp 0.8s ease-out forwards;
-      animation-delay: 0.4s;
-    }
-
-    .free-trial,
-    .review-button {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      font-weight: bold;
-      color: var(--primary-color);
-      cursor: pointer;
-      transition: color 0.3s;
-      user-select: none;
-      text-decoration: none;
-    }
-
-    .free-trial:hover,
-    .review-button:hover {
-      color: orange;
-    }
-
-    .button-container {
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-      margin-top: 20px;
-    }
-
-    .custom-button {
-      background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
-      color: white;
-      text-decoration: none;
-      padding: 15px 20px;
-      font-size: 18px;
-      font-weight: 500;
-      border-radius: 8px;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-      box-shadow: var(--shadow);
-    }
-
-    .custom-button:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 12px 24px rgba(0,0,0,0.15);
-    }
-
-    .calendar-label {
-      margin-top: 40px;
-      font-size: 24px;
-      font-weight: 600;
-      color: var(--text-color);
-    }
-
-    .calendar-container {
-      margin-top: 20px;
-      width: 100%;
+    .text-danger {
+      color: #4A90E2 !important;
     }
 
     .calendar-container iframe {
       width: 100%;
-      height: 450px;
-      border: none;
-      box-shadow: var(--shadow);
-      border-radius: 8px;
-    }
-
-    #review-section {
-      margin-top: 40px;
-      text-align: left;
-      animation: fadeInUp 0.8s ease-out forwards;
-      animation-delay: 0.5s;
-      position: relative;
-    }
-
-    .review {
-      display: flex;
-      align-items: flex-start;
-      gap: 16px;
-      padding: 15px 0;
-      border-bottom: 1px solid #ddd;
-    }
-
-    .review:last-child {
-      border-bottom: none;
-    }
-
-    .review-avatar {
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 3px solid gold;
-      box-shadow: var(--shadow);
-    }
-
-    .review-content {
-      flex: 1;
-      font-size: 16px;
-      color: var(--text-color);
-    }
-
-    .stars {
-      color: gold;
-      font-size: 18px;
-      margin-top: 4px;
-    }
-
-    footer {
-      margin-top: auto;
-      padding: 20px;
-      font-size: 14px;
-      color: #777;
-      text-align: center;
-      opacity: 0;
-      animation: fadeInUp 0.8s ease-out forwards;
-      animation-delay: 0.6s;
-    }
-
-    #back-to-top {
-      position: fixed;
-      bottom: 30px;
-      right: 30px;
-      background: var(--primary-color);
-      color: white;
-      border-radius: 50%;
-      padding: 12px;
-      display: none;
-      cursor: pointer;
-      box-shadow: var(--shadow);
-      font-size: 18px;
-      line-height: 1;
-    }
-
-    #back-to-top.show {
-      display: block;
-    }
-
-    /* New styles for the price section */
-    .price-section {
-      position: relative;
-      background: linear-gradient(135deg, #ffffff, #f9fafc);
-      backdrop-filter: blur(15px);
-      border: 1px solid rgba(255,255,255,0.5);
-      border-radius: 20px;
-      padding: 40px 30px;
-      margin-top: 40px;
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
-      width: 90%;
-      max-width: 600px;
-      text-align: center;
-      opacity: 0;
-      animation: fadeInUp 0.8s ease-out forwards;
-      animation-delay: 0.3s;
-      /* Added these lines to center the content */
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      gap: 20px;
-    }
-
-    .price-tag {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 40px;
-      font-weight: 800;
-      color: #FF8C00;
-      margin-bottom: 0; /* Changed from 20px */
-      text-shadow: 1px 1px 2px rgba(0,0,0,0.05);
-    }
-    
-    .price-subtitle {
-      color: #666;
-      font-size: 16px;
-      margin: 0;
-    }
-
-    .price-button {
-      background: linear-gradient(135deg, #FFA500, #FF6600);
-      color: white;
-      padding: 14px 28px;
-      font-size: 18px;
-      font-weight: 600;
+      height: 600px;
       border: none;
       border-radius: 10px;
-      cursor: pointer;
-      box-shadow: 0 6px 14px rgba(255, 140, 0, 0.4);
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-    .price-button:hover {
-      transform: scale(1.05);
-      box-shadow: 0 10px 24px rgba(255, 140, 0, 0.5);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
     }
 
-    @media (max-width: 600px) {
-      header h1 {
-        font-size: 24px;
-      }
-      .custom-button {
-        font-size: 16px;
-      }
-      .free-classes-button {
-        font-size: 12px;
-        padding: 6px 10px;
-      }
-      .calendar-container iframe {
-        height: 500px;
-      }
-      .price-tag {
-        font-size: 28px;
-      }
-      .price-button {
-        font-size: 16px;
-      }
+    .profile-img-large {
+      width: 300px;
+      height: 300px;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 5px solid #fff;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
     }
   </style>
 </head>
-<body>
-  <div class="page-wrapper">
 
-    <header>
-      <div class="free-button-wrapper">
-        <a href="https://divalanguages.github.io/Free_Classes/" target="_blank" class="free-classes-button">Go to: Free Classes</a>
+<body>
+  <!-- Page-->
+  <div class="page text-center">
+    <!-- Page Head-->
+    <header class="page-head slider-menu-position">
+      <!-- RD Navbar Transparent-->
+      <div class="rd-navbar-wrap">
+        <nav class="rd-navbar container rd-navbar-floated rd-navbar-dark" data-md-device-layout="rd-navbar-fixed"
+          data-lg-device-layout="rd-navbar-static" data-lg-auto-height="true" data-md-layout="rd-navbar-fixed"
+          data-lg-layout="rd-navbar-static" data-lg-stick-up="true">
+          <div class="rd-navbar-inner">
+            <!-- RD Navbar Top Panel-->
+            <div class="rd-navbar-top-panel context-dark bg-danger">
+              <div class="left-side">
+                <address class="contact-info text-left"><span class="icon mdi mdi-email-open novi-icon"></span><span
+                    class="text-middle">Your Personal English & Indonesian Coach</span></address>
+              </div>
+              <div class="right-side">
+                <ul class="list-inline list-inline-sm">
+                  <li class="list-inline-item"><a class="novi-icon fa fa-instagram"
+                      href="https://www.instagram.com/dv_lingo/" target="_blank"></a></li>
+                  <li class="list-inline-item"><a class="novi-icon fa fa-facebook"
+                      href="https://www.facebook.com/profile.php?id=61573026435396" target="_blank"></a></li>
+                  <li class="list-inline-item"><a class="novi-icon fa fa-youtube"
+                      href="https://www.youtube.com/watch?v=MwqEMhl9a4Q" target="_blank"></a></li>
+                </ul>
+              </div>
+            </div>
+            <!-- RD Navbar Panel -->
+            <div class="rd-navbar-panel">
+              <button class="rd-navbar-toggle"
+                data-rd-navbar-toggle=".rd-navbar, .rd-navbar-nav-wrap"><span></span></button>
+              <div class="rd-navbar-brand"><a href="index.html"><img width='50' src='images/logo.png' alt='DV Lingo' />
+                  <span style="font-weight:bold; font-size: 20px; color: white; vertical-align: middle;">DV
+                    Lingo</span></a></div>
+            </div>
+            <div class="rd-navbar-menu-wrap">
+              <div class="rd-navbar-nav-wrap">
+                <div class="rd-navbar-mobile-scroll">
+                  <div class="rd-navbar-mobile-brand"><a href="index.html"><img width='40' src='images/logo.png'
+                        alt='' /></a></div>
+                  <ul class="rd-navbar-nav">
+                    <li class="active"><a href="#"><span>Home</span></a></li>
+                    <li><a href="https://divalanguages.github.io/Free_Classes/" target="_blank"><span>Free
+                          Classes</span></a></li>
+                    <li><a
+                        href="https://docs.google.com/forms/d/e/1FAIpQLSfvw8vyKRF9d2eoGOzTk3Z-XFmjgSClnhQ6aKmdL03MndyDQA/viewform?usp=dialog"
+                        target="_blank"><span>Book Class</span></a></li>
+                    <li><a href="#reviews"><span>Reviews</span></a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </nav>
       </div>
-      <div class="profile-and-social">
-        <div class="profile-container">
-          <img src="bona.png" alt="Instructor Photo" class="profile">
-          <a href="https://www.youtube.com/watch?v=MwqEMhl9a4Q" target="_blank" class="play-button"><img src="boto youtube.png" alt="Play Button"></a>
-          <img src="DV Lingo.png" alt="DV Lingo Logo" class="dv-lingo-logo">
+      <!--Swiper-->
+      <div class="swiper-container swiper-slider" data-loop="true" data-autoplay="5000" data-dragable="false">
+        <div class="swiper-wrapper text-center">
+          <!-- Slide 1 -->
+          <div class="swiper-slide" data-slide-bg="images/background-01-1920x750.jpg">
+            <div class="swiper-caption swiper-parallax" data-speed="0.5" data-fade="true">
+              <div class="swiper-slide-caption">
+                <div class="container">
+                  <div class="row justify-content-xl-center">
+                    <div class="col-xl-12">
+                      <div class="text-extra-big font-weight-bold font-italic text-uppercase"
+                        data-caption-animate="fadeInUp" data-caption-delay="300">Learn. Connect. Belong.</div>
+                    </div>
+                    <div class="col-xl-8 offset-top-10">
+                      <h5 class="hidden d-sm-block text-light" data-caption-animate="fadeInUp" data-caption-delay="500">
+                        Master English or Indonesian with a personal coach.
+                      </h5>
+                      <div class="offset-top-20 offset-sm-top-50"><a class="btn btn-danger btn-anis-effect"
+                          href="https://docs.google.com/forms/d/e/1FAIpQLSfvw8vyKRF9d2eoGOzTk3Z-XFmjgSClnhQ6aKmdL03MndyDQA/viewform?usp=dialog"
+                          target="_blank" data-caption-animate="fadeInUp" data-caption-delay="800"><span
+                            class="btn-text">Book Now - $7/Class</span></a></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="social-box">
-          <a href="https://www.instagram.com/dv_lingo/" target="_blank"><img src="instagram.png" alt="Instagram"></a>
-          <a href="https://www.facebook.com/profile.php?id=61573026435396" target="_blank"><img src="Facebook.png" alt="Facebook"></a>
-          <a href="https://www.tiktok.com/@divss75" target="_blank"><img src="Tiktok.png" alt="TikTok"></a>
-        </div>
+        <div class="swiper-pagination"></div>
       </div>
-      <h1>Learn. Connect. Belong.</h1>
     </header>
 
-    <div class="price-section">
-      <h2 class="price-tag">Only 7$/Class</h2>
-      <p class="price-subtitle">50 min/Class. Cancel anytime.</p>
-      <button class="price-button">Book Now</button>
-    </div>
-
-    <div class="card">
-      <a class="free-trial" href="https://forms.gle/x51RocTv4jamuccr5" target="_blank">🎁 Free Trial Class 🎁</a>
-      <h2>Manage Your Class</h2>
-      <div class="button-container">
-        <a class="custom-button" href="https://docs.google.com/forms/d/e/1FAIpQLSfvw8vyKRF9d2eoGOzTk3Z-XFmjgSClnhQ6aKmdL03MndyDQA/viewform?usp=dialog" target="_blank">📘 Book a New Class</a>
-        <a class="custom-button" href="https://docs.google.com/forms/d/e/1FAIpQLSdR-olXRpc4XBUiytXA75Igt65dJJ9D-vx5ZiCHINSM_aoNZQ/viewform?usp=dialog" target="_blank">📝 Modify a Class</a>
-        <a class="custom-button" href="https://docs.google.com/forms/d/e/1FAIpQLSfyQ_APdatyfIHT8hKJsTpb5g5HfeUfdWTMNEFXoXbUz2QgDw/viewform?usp=dialog" target="_blank">❌ Cancel a Class</a>
+    <!-- Manage Classes -->
+    <section class="section-98 section-md-110 novi-background">
+      <div class="container">
+        <h1>Manage Your Classes</h1>
+        <hr class="divider bg-danger">
+        <div class="row justify-content-sm-center offset-top-66">
+          <div class="col-xl-8">
+            <p>Easily book, modify, or cancel your sessions online.</p>
+          </div>
+        </div>
+        <div class="row justify-content-center grid-group-lg offset-top-98">
+          <div class="col-md-8 col-lg-4">
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLSfvw8vyKRF9d2eoGOzTk3Z-XFmjgSClnhQ6aKmdL03MndyDQA/viewform?usp=dialog"
+              target="_blank" style="display:block; text-decoration:none; color:inherit;">
+              <div class="box-icon box-icon-bordered"><span
+                  class="novi-icon icon icon-outlined icon-sm icon-dark-filled mdi mdi-book-open-page-variant"></span>
+                <h4 class="text-danger offset-top-20">Book a Class</h4>
+                <p>Schedule your next session.</p>
+              </div>
+            </a>
+          </div>
+          <div class="col-md-8 col-lg-4">
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLSdR-olXRpc4XBUiytXA75Igt65dJJ9D-vx5ZiCHINSM_aoNZQ/viewform?usp=dialog"
+              target="_blank" style="display:block; text-decoration:none; color:inherit;">
+              <div class="box-icon box-icon-bordered"><span
+                  class="novi-icon icon icon-outlined icon-xs icon-dark-filled mdi mdi-pencil"></span>
+                <h4 class="text-danger offset-top-20">Modify Class</h4>
+                <p>Change your class time or details.</p>
+              </div>
+            </a>
+          </div>
+          <div class="col-md-8 col-lg-4">
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLSfyQ_APdatyfIHT8hKJsTpb5g5HfeUfdWTMNEFXoXbUz2QgDw/viewform?usp=dialog"
+              target="_blank" style="display:block; text-decoration:none; color:inherit;">
+              <div class="box-icon box-icon-bordered"><span
+                  class="novi-icon icon icon-outlined icon-sm icon-dark-filled mdi mdi-close-circle"></span>
+                <h4 class="text-danger offset-top-20">Cancel Class</h4>
+                <p>Cancel an upcoming session.</p>
+              </div>
+            </a>
+          </div>
+        </div>
+        <div class="offset-top-50">
+          <a href="https://forms.gle/x51RocTv4jamuccr5" target="_blank" class="btn btn-danger">🎁 Get a Free Trial
+            Class</a>
+        </div>
       </div>
-      <h2 class="calendar-label">Check My Calendar</h2>
-      <div class="calendar-container">
-        <iframe src="https://calendar.google.com/calendar/embed?src=charlottebro2003@gmail.com&mode=WEEK&showTitle=0&showPrint=0&showTabs=0&showCalendars=0&hl=en" scrolling="no"></iframe>
+    </section>
+
+    <!-- Calendar -->
+    <section class="section-98 section-md-110 bg-gray-light">
+      <div class="container">
+        <h1>Check Availability</h1>
+        <hr class="divider bg-danger">
+        <div class="calendar-container offset-top-66">
+          <iframe
+            src="https://calendar.google.com/calendar/embed?src=charlottebro2003@gmail.com&mode=WEEK&showTitle=0&showPrint=0&showTabs=0&showCalendars=0&hl=en"
+            scrolling="no"></iframe>
+        </div>
       </div>
-    </div>
+    </section>
 
-    <div id="review-section" class="card">
-      <a class="review-button" href="https://docs.google.com/forms/d/e/1FAIpQLSf0YvzLUiqX57ThQFHZuAQmhAOQp0FxQWWuzmfkKNj75cszBQ/viewform" target="_blank">+ Add Review</a>
-      <h2>🌟 What Students Say</h2>
-      <div id="reviews-container">Loading reviews...</div>
-    </div>
-
-    <footer>
-      © Your English/Indonesian Coach · All rights reserved
-    </footer>
-
-    <div id="back-to-top">↑</div>
-
-    <script>
-      const topBtn = document.getElementById('back-to-top');
-      window.addEventListener('scroll', () => {
-        topBtn.classList.toggle('show', window.scrollY > 400);
-      });
-      topBtn.addEventListener('click', () => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      });
-
-      const reviewsUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSBJXnKY_fI_tWGc2yR4DFv36inpn6cOpFJPtGyjwcA6pjwyO-ElNXr6mPBfU487lD1ZPEPgsrqTtOF/pub?gid=0&single=true&output=csv";
-
-      function parseCSV(data) {
-        const lines = data.trim().split('\n');
-        const headers = lines[0].split(',');
-        return lines.slice(1).map(row => {
-          const values = row.split(',');
-          let review = {};
-          headers.forEach((h, i) => {
-            review[h.trim()] = values[i]?.trim();
-          });
-          return review;
-        });
-      }
-
-      function createReviewHTML({ Name, Review, Rate, Image }) {
-        const stars = '⭐'.repeat(parseInt(Rate || 0));
-        const avatar = Image ? `<img src="${Image}" alt="${Name}" class="review-avatar">` : '';
-        return `<div class="review">
-            ${avatar}
-            <div class="review-content">
-              <strong>${Name || "Anonymous"}</strong><br>
-              ${Review || ""}<br>
-              <div class="stars">${stars}</div>
+    <!-- Coach Profile -->
+    <section class="section-98 section-md-110 novi-background">
+      <div class="container">
+        <h1>Meet Your Coach</h1>
+        <hr class="divider bg-danger">
+        <div class="row justify-content-center offset-top-66">
+          <div class="col-md-6">
+            <img src="images/bona.png" alt="Bona" class="profile-img-large">
+            <h3 class="offset-top-20">Bona</h3>
+            <p class="text-muted">English & Indonesian Instructor</p>
+            <p>Passionate about helping you connect with the world through language. Join me for a fun and effective
+              learning experience!</p>
+            <div class="offset-top-20">
+              <a href="https://www.youtube.com/watch?v=MwqEMhl9a4Q" target="_blank" class="btn btn-danger btn-sm"><span
+                  class="fa fa-play text-middle"></span> Watch Intro</a>
             </div>
-          </div>`;
-      }
+          </div>
+        </div>
+      </div>
+    </section>
 
-      fetch(reviewsUrl)
-        .then(response => response.text())
-        .then(csv => {
-          let reviews = parseCSV(csv);
-          reviews = reviews.sort((a, b) => new Date(b["Date"]) - new Date(a["Date"]));
-          const container = document.getElementById('reviews-container');
-          const reviewLimit = 4;
-          const visibleReviews = reviews.slice(0, reviewLimit).map(createReviewHTML).join('');
-          const hiddenReviews = reviews.slice(reviewLimit).map(createReviewHTML).join('');
-          container.innerHTML = visibleReviews;
+    <!-- Testimonials (Placeholder for now) -->
+    <section id="reviews" class="section-98 section-md-110 bg-gray-darkest context-dark">
+      <div class="container">
+        <h1>Student Reviews</h1>
+        <hr class="divider bg-white">
+        <div class="row justify-content-center offset-top-50">
+          <div class="col-md-10">
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLSf0YvzLUiqX57ThQFHZuAQmhAOQp0FxQWWuzmfkKNj75cszBQ/viewform"
+              target="_blank" class="btn btn-danger btn-sm offset-bottom-40">+ Add Your Review</a>
+            <!-- Reviews Container -->
+            <div id="reviews-grid" class="row">
+              <div class="col-12 text-center">Loading reviews...</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
-          if (hiddenReviews) {
-            const showMoreBtn = document.createElement('button');
-            showMoreBtn.textContent = "Show more";
-            showMoreBtn.style.marginTop = "15px";
-            showMoreBtn.style.padding = "10px 16px";
-            showMoreBtn.style.fontSize = "14px";
-            showMoreBtn.style.cursor = "pointer";
-            showMoreBtn.style.backgroundColor = "#4A90E2";
-            showMoreBtn.style.color = "white";
-            showMoreBtn.style.border = "none";
-            showMoreBtn.style.borderRadius = "6px";
-            showMoreBtn.style.boxShadow = "var(--shadow)";
-
-            const hiddenDiv = document.createElement('div');
-            hiddenDiv.innerHTML = hiddenReviews;
-            hiddenDiv.style.display = "none";
-
-            showMoreBtn.addEventListener('click', () => {
-              hiddenDiv.style.display = "block";
-              showMoreBtn.style.display = "none";
-            });
-
-            container.appendChild(hiddenDiv);
-            container.appendChild(showMoreBtn);
-          }
-        })
-        .catch(error => {
-          console.error("Failed to load reviews:", error);
-          document.getElementById('reviews-container').textContent = "Unable to load reviews.";
-        });
-    </script>
+    <!-- Page Footer-->
+    <footer
+      class="section-relative section-top-66 section-bottom-34 page-footer bg-gray-base context-dark novi-background">
+      <div class="container">
+        <div class="row justify-content-center text-center">
+          <div class="col-md-12">
+            <div class="footer-brand"><a href="index.html"><img width='50' src='images/logo.png' alt='' /> <span
+                  style="font-size:20px;">DV Lingo</span></a></div>
+            <ul class="list-inline offset-top-20">
+              <li class="list-inline-item"><a
+                  class="novi-icon icon fa fa-facebook icon-xxs icon-circle icon-darkest-filled"
+                  href="https://www.facebook.com/profile.php?id=61573026435396" target="_blank"></a></li>
+              <li class="list-inline-item"><a
+                  class="novi-icon icon fa fa-instagram icon-xxs icon-circle icon-darkest-filled"
+                  href="https://www.instagram.com/dv_lingo/" target="_blank"></a></li>
+              <li class="list-inline-item"><a
+                  class="novi-icon icon fa fa-tiktok icon-xxs icon-circle icon-darkest-filled"
+                  href="https://www.tiktok.com/@divss75" target="_blank"></a></li>
+            </ul>
+            <p class="text-darker offset-top-20">DV Lingo &copy; <span id="copyright-year"></span>. All Rights Reserved.
+            </p>
+          </div>
+        </div>
+      </div>
+    </footer>
   </div>
+
+  <!-- Java script-->
+  <script src="js/core.min.js"></script>
+  <script src="js/script.js"></script>
+
+  <!-- Custom Script for Reviews -->
+  <script>
+    const reviewsUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSBJXnKY_fI_tWGc2yR4DFv36inpn6cOpFJPtGyjwcA6pjwyO-ElNXr6mPBfU487lD1ZPEPgsrqTtOF/pub?gid=0&single=true&output=csv";
+
+    function parseCSV(data) {
+      const lines = data.trim().split('\n');
+      const headers = lines[0].split(',');
+      return lines.slice(1).map(row => {
+        const values = row.split(',');
+        let review = {};
+        headers.forEach((h, i) => {
+          review[h.trim()] = values[i] ? values[i].trim() : '';
+        });
+        return review;
+      });
+    }
+
+    function createReviewCard({ Name, Review, Rate, Image }) {
+      const stars = '★'.repeat(parseInt(Rate || 5));
+      const img = Image && Image.length > 5 ? Image : 'images/logo.png';
+      return `
+             <div class="col-md-6 col-lg-4 offset-top-30">
+               <div class="box-icon box-icon-bordered" style="padding: 20px; background: rgba(255,255,255,0.05);">
+                  <div style="font-size: 20px; color: gold; margin-bottom: 10px;">${stars}</div>
+                  <p class="text-white">"${Review || ''}"</p>
+                  <h5 class="offset-top-20 text-danger">- ${Name || 'Anonymous'}</h5>
+               </div>
+             </div>
+           `;
+    }
+
+    fetch(reviewsUrl)
+      .then(res => res.text())
+      .then(csv => {
+        let reviews = parseCSV(csv);
+        reviews.sort((a, b) => new Date(b.Date) - new Date(a.Date));
+        const container = document.getElementById('reviews-grid');
+        container.innerHTML = reviews.slice(0, 6).map(createReviewCard).join('');
+      })
+      .catch(e => console.error(e));
+  </script>
 </body>
-</html>
-</body>
+
 </html>
