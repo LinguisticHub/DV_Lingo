@@ -286,7 +286,7 @@
     <!-- Testimonials (Placeholder for now) -->
     <section id="reviews" class="section-98 section-md-110 bg-gray-darkest context-dark">
       <div class="container">
-        <h1>Student Reviews</h1>
+        <h1>Student Reviews <span id="avg-rating" style="font-size: 0.6em; color: gold; display: none;"></span></h1>
         <hr class="divider bg-white">
         <div class="row justify-content-center offset-top-50">
           <div class="col-md-10">
@@ -295,6 +295,9 @@
             <!-- Reviews Container -->
             <div id="reviews-grid" class="row">
               <div class="col-12 text-center">Loading reviews...</div>
+            </div>
+            <div id="show-more-container" class="text-center offset-top-40" style="display: none;">
+              <button id="btn-show-more" class="btn btn-default btn-sm">Show More</button>
             </div>
           </div>
         </div>
@@ -353,17 +356,17 @@
 
     function createReviewCard({ Name, Review, Rate, Image }) {
       const stars = '★'.repeat(parseInt(Rate || 5));
-      // Use a fallback if Image is empty/invalid, or don't show it if you prefer. 
-      // User asked for the image from the file, assuming valid URL.
       const imgUrl = Image && Image.length > 5 ? Image : '';
-
       const imgHtml = imgUrl ? `<img src="${imgUrl}" alt="${Name}" style="width: 30px; height: 30px; border-radius: 50%; object-fit: cover; margin-right: 10px; display: inline-block; vertical-align: middle;">` : '';
 
+      // Added height: 100% and flex/column styles to ensure equal height
       return `
-         <div class="col-md-6 col-lg-4 offset-top-30">
-           <div class="box-icon box-icon-bordered" style="padding: 20px; background: rgba(255,255,255,0.05);">
-              <div style="font-size: 20px; color: gold; margin-bottom: 10px;">${stars}</div>
-              <p class="text-white" style="font-weight: 400;">"${Review || ''}"</p>
+         <div class="col-md-6 col-lg-4 offset-top-30" style="display: flex;">
+           <div class="box-icon box-icon-bordered" style="padding: 20px; background: rgba(255,255,255,0.05); width: 100%; display: flex; flex-direction: column; justify-content: space-between;">
+              <div>
+                <div style="font-size: 20px; color: gold; margin-bottom: 10px;">${stars}</div>
+                <p class="text-white" style="font-weight: 400;">"${Review || ''}"</p>
+              </div>
               <div class="offset-top-20">
                  ${imgHtml}
                  <h5 class="text-danger" style="display: inline-block; margin: 0; font-weight: 500; vertical-align: middle;">- ${Name || 'Anonymous'}</h5>
@@ -373,17 +376,49 @@
        `;
     }
 
+    let allReviews = [];
+    let showingAll = false;
+
+    function renderReviews() {
+      const container = document.getElementById('reviews-grid');
+      const showMoreContainer = document.getElementById('show-more-container');
+      const btnShowMore = document.getElementById('btn-show-more');
+
+      const reviewsToRender = showingAll ? allReviews : allReviews.slice(0, 3);
+
+      container.innerHTML = reviewsToRender.map(createReviewCard).join('');
+
+      if (allReviews.length > 3) {
+        showMoreContainer.style.display = 'block';
+        btnShowMore.textContent = showingAll ? 'Show Less' : 'Show More';
+      } else {
+        showMoreContainer.style.display = 'none';
+      }
+    }
+
+    document.getElementById('btn-show-more').addEventListener('click', function () {
+      showingAll = !showingAll;
+      renderReviews();
+    });
 
     fetch(reviewsUrl)
       .then(res => res.text())
       .then(csv => {
-        let reviews = parseCSV(csv);
-        reviews.sort((a, b) => new Date(b.Date) - new Date(a.Date));
-        const container = document.getElementById('reviews-grid');
-        container.innerHTML = reviews.slice(0, 6).map(createReviewCard).join('');
+        allReviews = parseCSV(csv);
+        // Sort by date descending
+        allReviews.sort((a, b) => new Date(b.Date) - new Date(a.Date));
+
+        // Calculate Average
+        if (allReviews.length > 0) {
+          const totalRate = allReviews.reduce((sum, r) => sum + (parseInt(r.Rate) || 0), 0);
+          const avg = (totalRate / allReviews.length).toFixed(1);
+          const avgEl = document.getElementById('avg-rating');
+          avgEl.innerHTML = `★ ${avg}`; // Using star emoji
+          avgEl.style.display = 'inline';
+        }
+
+        renderReviews();
       })
       .catch(e => console.error(e));
   </script>
 </body>
-
-</html>
