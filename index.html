@@ -353,17 +353,26 @@
 
     function createReviewCard({ Name, Review, Rate, Image }) {
       const stars = '★'.repeat(parseInt(Rate || 5));
-      const img = Image && Image.length > 5 ? Image : 'images/logo.png';
+      // Use a fallback if Image is empty/invalid, or don't show it if you prefer. 
+      // User asked for the image from the file, assuming valid URL.
+      const imgUrl = Image && Image.length > 5 ? Image : '';
+
+      const imgHtml = imgUrl ? `<img src="${imgUrl}" alt="${Name}" style="width: 30px; height: 30px; border-radius: 50%; object-fit: cover; margin-right: 10px; display: inline-block; vertical-align: middle;">` : '';
+
       return `
-             <div class="col-md-6 col-lg-4 offset-top-30">
-               <div class="box-icon box-icon-bordered" style="padding: 20px; background: rgba(255,255,255,0.05);">
-                  <div style="font-size: 20px; color: gold; margin-bottom: 10px;">${stars}</div>
-                  <p class="text-white">"${Review || ''}"</p>
-                  <h5 class="offset-top-20 text-danger">- ${Name || 'Anonymous'}</h5>
-               </div>
-             </div>
-           `;
+         <div class="col-md-6 col-lg-4 offset-top-30">
+           <div class="box-icon box-icon-bordered" style="padding: 20px; background: rgba(255,255,255,0.05);">
+              <div style="font-size: 20px; color: gold; margin-bottom: 10px;">${stars}</div>
+              <p class="text-white" style="font-weight: 400;">"${Review || ''}"</p>
+              <div class="offset-top-20">
+                 ${imgHtml}
+                 <h5 class="text-danger" style="display: inline-block; margin: 0; font-weight: 500; vertical-align: middle;">- ${Name || 'Anonymous'}</h5>
+              </div>
+           </div>
+         </div>
+       `;
     }
+
 
     fetch(reviewsUrl)
       .then(res => res.text())
