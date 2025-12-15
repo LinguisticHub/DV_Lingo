@@ -26,9 +26,14 @@
       z-index: 1;
     }
 
-    html.ie-10 .ie-panel,
     html.lt-ie-10 .ie-panel {
       display: block;
+    }
+
+    @media (max-width: 767px) {
+      section[data-preset="Map"] {
+        display: none !important;
+      }
     }
   </style>
 </head>
