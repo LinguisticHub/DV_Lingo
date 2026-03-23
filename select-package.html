@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html class="wow-animation" lang="en">
+
+<head>
+    <title>Select Your Package - DV Lingo</title>
+    <meta charset="utf-8">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="viewport"
+        content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta name="keywords" content="indonesian, language class, tutor, learn, packages">
+    <meta name="date" content="Mar 23">
+    <link rel="icon" href="images/logo.png" type="image/png">
+    <link rel="stylesheet" type="text/css"
+        href="//fonts.googleapis.com/css?family=Ubuntu:400,400italic,500,700,700italic">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .package-card {
+            padding: 30px;
+            border: 2px solid #eee;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+            background: #fff;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+        }
+
+        .package-card:hover {
+            border-color: #d01919;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .package-card.popular {
+            border-color: #d01919;
+            background: #fff8f8;
+        }
+
+        .popular-badge {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #d01919;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .package-price {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin: 10px 0;
+        }
+
+        .package-desc {
+            font-size: 16px;
+            color: #666;
+        }
+
+        /* Primary Red */
+        .btn-danger {
+            background-color: #d01919;
+            border-color: #d01919;
+        }
+
+        .btn-danger:hover {
+            background-color: #ae1515;
+            border-color: #ae1515;
+        }
+
+        .text-danger {
+            color: #d01919 !important;
+        }
+
+        @media (max-width: 767px) {
+            .rd-navbar-brand {
+                display: block !important;
+                position: absolute;
+                left: 50%;
+                top: 55%;
+                transform: translate(-50%, -50%);
+            }
+
+            .rd-navbar-brand img {
+                width: 50px !important;
+                height: auto !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page text-center">
+        <!-- Page Head-->
+        <header class="page-head">
+            <div class="rd-navbar-wrap">
+                <nav class="rd-navbar container rd-navbar-floated rd-navbar-dark"
+                    data-md-device-layout="rd-navbar-fixed" data-lg-device-layout="rd-navbar-static"
+                    data-lg-auto-height="true" data-md-layout="rd-navbar-fixed" data-lg-layout="rd-navbar-static"
+                    data-lg-stick-up="true">
+                    <div class="rd-navbar-inner">
+                        <div class="rd-navbar-top-panel context-dark bg-danger">
+                            <div class="left-side">
+                                <address class="contact-info text-left"><span
+                                        class="icon mdi mdi-email-open novi-icon"></span><span class="text-middle">Your
+                                        Personal Indonesian Coach</span></address>
+                            </div>
+                            <div class="right-side">
+                                <ul class="list-inline list-inline-sm">
+                                    <li class="list-inline-item"><a class="novi-icon fa fa-instagram"
+                                            href="https://www.instagram.com/dv_lingo/" target="_blank"></a></li>
+                                    <li class="list-inline-item"><a class="novi-icon fa fa-facebook"
+                                            href="https://www.facebook.com/profile.php?id=61573026435396"
+                                            target="_blank"></a></li>
+                                    <li class="list-inline-item"><a class="novi-icon fa fa-youtube"
+                                            href="https://www.youtube.com/watch?v=zmbVWpWG15g" target="_blank"></a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="rd-navbar-panel">
+                            <button class="rd-navbar-toggle"
+                                data-rd-navbar-toggle=".rd-navbar, .rd-navbar-nav-wrap"><span></span></button>
+                            <div class="rd-navbar-brand"><a href="index.html"><img width='90' src='images/logo.png'
+                                        alt='DV Lingo' /></a></div>
+                        </div>
+                        <div class="rd-navbar-menu-wrap">
+                            <div class="rd-navbar-nav-wrap">
+                                <div class="rd-navbar-mobile-scroll">
+                                    <div class="rd-navbar-mobile-brand"><a href="index.html"><img width='40'
+                                                src='images/logo.png' alt='' /></a></div>
+                                    <ul class="rd-navbar-nav">
+                                        <li><a href="index.html"><span>Home</span></a></li>
+                                        <li><a href="meet-instructor.html"><span>Meet Your Instructor</span></a></li>
+                                        <li><a href="methodology.html"><span>Our Methodology</span></a></li>
+                                        <li><a href="contacts.html"><span>Contact Us</span></a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </header>
+
+        <!-- Modern Breadcrumbs-->
+        <section class="context-dark">
+            <div class="parallax-container breadcrumb-modern bg-gray-darkest" data-parallax-img="images/header-bg.jpg">
+                <div class="parallax-content">
+                    <div
+                        class="container section-top-98 section-bottom-34 section-lg-bottom-66 section-lg-98 section-xl-top-110 section-xl-bottom-41">
+                        <h2 class="d-none d-lg-block offset-top-30"><span class="big">Choose Your Package</span></h2>
+                        <ul class="list-inline list-inline-dashed">
+                            <li class="list-inline-item"><a href="index.html">Home</a></li>
+                            <li class="list-inline-item">Select Package</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Package Selection Section -->
+        <section class="section-98 section-md-110 bg-gray-light">
+            <div class="container">
+                <h1>Select Your Class Package</h1>
+                <hr class="divider bg-danger">
+                <p class="offset-top-20">Price per class is always <span
+                        class="text-danger font-weight-bold">$10</span>. Select a package below to proceed with payment
+                    via PayPal.</p>
+
+                <div class="row justify-content-center grid-group-md offset-top-66">
+                    <!-- 10 Classes -->
+                    <div class="col-md-4 col-sm-6">
+                        <a href="https://paypal.me/datameup/100USD" target="_blank" style="text-decoration:none;">
+                            <div class="package-card">
+                                <h4 class="text-danger">10 Classes</h4>
+                                <div class="package-price">$100</div>
+                                <p class="package-desc">Start your learning journey</p>
+                            </div>
+                        </a>
+                    </div>
+
+                    <!-- 15 Classes -->
+                    <div class="col-md-4 col-sm-6">
+                        <a href="https://paypal.me/datameup/150USD" target="_blank" style="text-decoration:none;">
+                            <div class="package-card">
+                                <h4 class="text-danger">15 Classes</h4>
+                                <div class="package-price">$150</div>
+                                <p class="package-desc">Perfect for consistent learners</p>
+                            </div>
+                        </a>
+                    </div>
+
+                    <!-- 20 Classes - MOST POPULAR -->
+                    <div class="col-md-4 col-sm-6">
+                        <a href="https://paypal.me/datameup/200USD" target="_blank" style="text-decoration:none;">
+                            <div class="package-card popular">
+                                <div class="popular-badge">Most Popular</div>
+                                <h4 class="text-danger">20 Classes</h4>
+                                <div class="package-price">$200</div>
+                                <p class="package-desc">Best value for your progress</p>
+                            </div>
+                        </a>
+                    </div>
+
+                    <!-- 25 Classes -->
+                    <div class="col-md-4 col-sm-6">
+                        <a href="https://paypal.me/datameup/250USD" target="_blank" style="text-decoration:none;">
+                            <div class="package-card">
+                                <h4 class="text-danger">25 Classes</h4>
+                                <div class="package-price">$250</div>
+                                <p class="package-desc">Deepen your fluency</p>
+                            </div>
+                        </a>
+                    </div>
+
+                    <!-- 30 Classes -->
+                    <div class="col-md-4 col-sm-6">
+                        <a href="https://paypal.me/datameup/300USD" target="_blank" style="text-decoration:none;">
+                            <div class="package-card">
+                                <h4 class="text-danger">30 Classes</h4>
+                                <div class="package-price">$300</div>
+                                <p class="package-desc">Master the language</p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="offset-top-66">
+                    <a href="https://paypal.me/datameup" target="_blank" class="btn btn-default">Especifica otra
+                        cantidad</a>
+                </div>
+
+                <div class="offset-top-50">
+                    <p class="text-muted">Secure payment via PayPal</p>
+                    <a href="https://paypal.me/datameup" target="_blank" class="btn btn-danger btn-anis-effect">
+                        <span class="btn-text">Pay with PayPal</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Page Footer-->
+        <footer
+            class="section-relative section-top-66 section-bottom-34 page-footer bg-gray-base context-dark novi-background">
+            <div class="container">
+                <div class="row justify-content-center text-center">
+                    <div class="col-md-12">
+                        <div class="footer-brand"><a href="index.html"><img width='90' src='images/logo.png'
+                                    alt='' /></a></div>
+                        <ul class="list-inline offset-top-20">
+                            <li class="list-inline-item"><a
+                                    class="novi-icon icon fa fa-facebook icon-xxs icon-circle icon-darkest-filled"
+                                    href="https://www.facebook.com/profile.php?id=61573026435396" target="_blank"></a>
+                            </li>
+                            <li class="list-inline-item"><a
+                                    class="novi-icon icon fa fa-instagram icon-xxs icon-circle icon-darkest-filled"
+                                    href="https://www.instagram.com/dv_lingo/" target="_blank"></a></li>
+                            <li class="list-inline-item"><a
+                                    class="novi-icon icon icon-xxs icon-circle icon-darkest-filled"
+                                    href="https://www.tiktok.com/@divss75" target="_blank"
+                                    style="display: inline-flex; align-items: center; justify-content: center; vertical-align: middle; transform: translateY(-2px);">
+                                    <img src="images/tiktok_icon.png" alt="TikTok" width="22" height="22">
+                                </a></li>
+                        </ul>
+                        <p class="text-darker offset-top-20">DV Lingo &copy; <span id="copyright-year"></span>. All
+                            Rights Reserved.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+    <script src="js/core.min.js"></script>
+    <script src="js/script.js"></script>
+</body>
+
+</html>
