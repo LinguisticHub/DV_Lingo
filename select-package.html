@@ -16,16 +16,22 @@
     <link rel="stylesheet" href="css/style.css">
     <style>
         .package-card {
-            padding: 30px;
+            padding: 15px;
             border: 2px solid #eee;
             border-radius: 15px;
             transition: all 0.3s ease;
             background: #fff;
             height: 100%;
+            width: 100%;
+            min-height: 90px;
             display: flex;
             flex-direction: column;
             justify-content: center;
             position: relative;
+        }
+
+        .package-card h4 {
+            margin: 0;
         }
 
         .package-card:hover {
@@ -172,78 +178,87 @@
             <div class="container">
                 <h1>Select Your Class Package</h1>
                 <hr class="divider bg-danger">
-                <p class="offset-top-20">Price per class is always <span
-                        class="text-danger font-weight-bold">$10</span>. Select a package below to proceed with payment
-                    via PayPal.</p>
 
-                <div class="row justify-content-center grid-group-md offset-top-66">
+                <div class="row justify-content-center grid-group-md offset-top-66"
+                    style="display: flex; flex-wrap: wrap;">
                     <!-- 10 Classes -->
-                    <div class="col-md-4 col-sm-6">
-                        <a href="https://paypal.me/datameup/100USD" target="_blank" style="text-decoration:none;">
+                    <div class="col-md-4 col-sm-6" style="display: flex;">
+                        <a href="https://paypal.me/datameup/100USD" target="_blank"
+                            style="text-decoration:none; display: flex; width: 100%;">
                             <div class="package-card">
                                 <h4 class="text-danger">10 Classes</h4>
-                                <div class="package-price">$100</div>
-                                <p class="package-desc">Start your learning journey</p>
                             </div>
                         </a>
                     </div>
 
                     <!-- 15 Classes -->
-                    <div class="col-md-4 col-sm-6">
-                        <a href="https://paypal.me/datameup/150USD" target="_blank" style="text-decoration:none;">
+                    <div class="col-md-4 col-sm-6" style="display: flex;">
+                        <a href="https://paypal.me/datameup/150USD" target="_blank"
+                            style="text-decoration:none; display: flex; width: 100%;">
                             <div class="package-card">
                                 <h4 class="text-danger">15 Classes</h4>
-                                <div class="package-price">$150</div>
-                                <p class="package-desc">Perfect for consistent learners</p>
                             </div>
                         </a>
                     </div>
 
                     <!-- 20 Classes - MOST POPULAR -->
-                    <div class="col-md-4 col-sm-6">
-                        <a href="https://paypal.me/datameup/200USD" target="_blank" style="text-decoration:none;">
+                    <div class="col-md-4 col-sm-6" style="display: flex;">
+                        <a href="https://paypal.me/datameup/200USD" target="_blank"
+                            style="text-decoration:none; display: flex; width: 100%;">
                             <div class="package-card popular">
                                 <div class="popular-badge">Most Popular</div>
                                 <h4 class="text-danger">20 Classes</h4>
-                                <div class="package-price">$200</div>
-                                <p class="package-desc">Best value for your progress</p>
                             </div>
                         </a>
                     </div>
 
                     <!-- 25 Classes -->
-                    <div class="col-md-4 col-sm-6">
-                        <a href="https://paypal.me/datameup/250USD" target="_blank" style="text-decoration:none;">
+                    <div class="col-md-4 col-sm-6 offset-top-30 offset-md-top-0" style="display: flex;">
+                        <a href="https://paypal.me/datameup/250USD" target="_blank"
+                            style="text-decoration:none; display: flex; width: 100%;">
                             <div class="package-card">
                                 <h4 class="text-danger">25 Classes</h4>
-                                <div class="package-price">$250</div>
-                                <p class="package-desc">Deepen your fluency</p>
                             </div>
                         </a>
                     </div>
 
                     <!-- 30 Classes -->
-                    <div class="col-md-4 col-sm-6">
-                        <a href="https://paypal.me/datameup/300USD" target="_blank" style="text-decoration:none;">
+                    <div class="col-md-4 col-sm-6 offset-top-30 offset-md-top-0" style="display: flex;">
+                        <a href="https://paypal.me/datameup/300USD" target="_blank"
+                            style="text-decoration:none; display: flex; width: 100%;">
                             <div class="package-card">
                                 <h4 class="text-danger">30 Classes</h4>
-                                <div class="package-price">$300</div>
-                                <p class="package-desc">Master the language</p>
+                            </div>
+                        </a>
+                    </div>
+
+                    <!-- 35 Classes -->
+                    <div class="col-md-4 col-sm-6 offset-top-30 offset-md-top-0" style="display: flex;">
+                        <a href="https://paypal.me/datameup/350USD" target="_blank"
+                            style="text-decoration:none; display: flex; width: 100%;">
+                            <div class="package-card">
+                                <h4 class="text-danger">35 Classes</h4>
                             </div>
                         </a>
                     </div>
                 </div>
 
                 <div class="offset-top-66">
-                    <a href="https://paypal.me/datameup" target="_blank" class="btn btn-default">Especifica otra
-                        cantidad</a>
+                    <h3>Specify another amount</h3>
+                    <div class="row justify-content-center offset-top-20">
+                        <div class="col-md-4 col-sm-6">
+                            <input type="number" id="custom-classes" class="form-control"
+                                placeholder="Number of classes" min="1"
+                                style="text-align: center; height: 50px; font-size: 18px;">
+                        </div>
+                    </div>
                 </div>
 
                 <div class="offset-top-50">
-                    <p class="text-muted">Secure payment via PayPal</p>
-                    <a href="https://paypal.me/datameup" target="_blank" class="btn btn-danger btn-anis-effect">
+                    <p class="text-muted">Secure payment via PayPal ($10/class)</p>
+                    <button onclick="payCustom()" class="btn btn-danger btn-anis-effect">
                         <span class="btn-text">Pay with PayPal</span>
-                    </a>
+                    </button>
                 </div>
             </div>
         </section>
@@ -281,6 +296,17 @@
     </div>
     <script src="js/core.min.js"></script>
     <script src="js/script.js"></script>
+    <script>
+        function payCustom() {
+            const count = document.getElementById('custom-classes').value;
+            if (count && count > 0) {
+                const total = count * 10;
+                window.open('https://paypal.me/datameup/' + total + 'USD', '_blank');
+            } else {
+                alert('Please enter the number of classes you wish to purchase.');
+            }
+        }
+    </script>
 </body>
 
 </html>
