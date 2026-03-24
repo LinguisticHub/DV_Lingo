@@ -14,8 +14,8 @@
   <link rel="stylesheet" type="text/css"
     href="//fonts.googleapis.com/css?family=Ubuntu:400,400italic,500,700,700italic">
   <link rel="stylesheet" href="css/style.css">
-  <!-- Google API & GIS -->
   <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script src="js/auth.js" defer></script>
   <script src="https://apis.google.com/js/api.js" async defer></script>
   <style>
     .ie-panel {
@@ -367,6 +367,10 @@
                       href="https://www.facebook.com/profile.php?id=61573026435396" target="_blank"></a></li>
                   <li class="list-inline-item"><a class="novi-icon fa fa-youtube"
                       href="https://www.youtube.com/watch?v=zmbVWpWG15g" target="_blank"></a></li>
+                  <!-- Auth Container -->
+                  <li class="list-inline-item" id="auth-header-wrapper" style="margin-left: 15px;">
+                    <div id="google-login-container"></div>
+                  </li>
                 </ul>
               </div>
             </div>
@@ -503,10 +507,6 @@
                     <label class="form-label-outside" for="user-email">Email Address</label>
                     <input class="form-control" id="user-email" type="email" placeholder="Your email" required>
                   </div>
-                  <!-- Google Sign-In Button -->
-                  <div class="offset-top-20" style="display: flex; justify-content: center;">
-                    <div id="g_id_signin"></div>
-                  </div>
                 </div>
               </div>
 
@@ -567,12 +567,9 @@
   <script src="js/core.min.js"></script>
   <script src="js/script.js"></script>
   <script>
-    const ICS_URL = "https://calendar.google.com/calendar/ical/orimazes%40gmail.com/public/basic.ics";
-    const TUTOR_TIMEZONE = "Asia/Kuala_Lumpur";
     const CALENDAR_ID = "orimazes@gmail.com";
 
-    // Google Client ID for GIS and GAPI
-    const GOOGLE_CLIENT_ID = "304890634707-otis8fk3c7oqc2480c3s41vbai5ibfpm.apps.googleusercontent.com";
+    // GOOGLE_CLIENT_ID is now handled in auth.js
 
     let tokenClient;
     let gapiInited = false;
@@ -624,6 +621,12 @@
       document.getElementById('user-name').addEventListener('input', validateFields);
       document.getElementById('user-email').addEventListener('input', validateFields);
 
+      // Check if global user is already logged in and pre-fill
+      const globalUser = localStorage.getItem('dv_user');
+      if (globalUser) {
+        autoFillBookingForm(JSON.parse(globalUser));
+      }
+
       gapiLoaded();
       gisLoaded();
 
@@ -661,35 +664,16 @@
     }
 
     function gisLoaded() {
+      // Use global client_id for authorization token
       tokenClient = google.accounts.oauth2.initTokenClient({
-        client_id: GOOGLE_CLIENT_ID,
+        client_id: "304890634707-otis8fk3c7oqc2480c3s41vbai5ibfpm.apps.googleusercontent.com",
         scope: 'https://www.googleapis.com/auth/calendar.readonly',
         callback: '', // defined later
       });
-
-      // Initialize Google Sign-In button for pre-filling
-      google.accounts.id.initialize({
-        client_id: GOOGLE_CLIENT_ID,
-        callback: handleCredentialResponse
-      });
-      google.accounts.id.renderButton(
-        document.getElementById("g_id_signin"),
-        { theme: "outline", size: "large", text: "signin_with", shape: "rectangular" }
-      );
-
       gisInited = true;
       maybeFetchCalendar();
     }
 
-    function handleCredentialResponse(response) {
-      // Decode JWT to get user info
-      const payload = JSON.parse(atob(response.credential.split('.')[1]));
-      document.getElementById('user-name').value = payload.name;
-      document.getElementById('user-email').value = payload.email;
-      const event = new Event('input', { bubbles: true });
-      document.getElementById('user-name').dispatchEvent(event);
-      document.getElementById('user-email').dispatchEvent(event);
-    }
 
     function maybeFetchCalendar() {
       if (gapiInited && gisInited) {

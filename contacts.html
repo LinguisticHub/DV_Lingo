@@ -11,9 +11,9 @@
   <meta name="keywords" content="intense web design multipurpose template">
   <meta name="date" content="Dec 26">
   <link rel="icon" href="images/logo.png" type="image/png">
-  <link rel="stylesheet" type="text/css"
-    href="//fonts.googleapis.com/css?family=Ubuntu:400,400italic,500,700,700italic">
   <link rel="stylesheet" href="css/style.css">
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script src="js/auth.js" defer></script>
   <style>
     .ie-panel {
       display: none;
@@ -83,6 +83,10 @@
                   <li class="list-inline-item"><a class="novi-icon fa fa-twitter" href="#"></a></li>
                   <li class="list-inline-item"><a class="novi-icon fa fa-google-plus" href="#"></a></li>
                   <li class="list-inline-item"><a class="novi-icon fa fa-youtube" href="#"></a></li>
+                  <!-- Auth Container -->
+                  <li class="list-inline-item" id="auth-header-wrapper" style="margin-left: 15px;">
+                    <div id="google-login-container"></div>
+                  </li>
                 </ul>
               </div>
             </div>
