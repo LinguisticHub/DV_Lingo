@@ -441,7 +441,18 @@
 
                 
         <div id="calendar-wrapper" style="display: none;" class="offset-top-41">
-            <h3 class="offset-bottom-30">Select a new available time</h3>
+            
+              <div style="text-align: right; margin-bottom: 20px;">
+                  <select id="timezone-select" class="timezone-select" style="padding: 8px 12px; font-size: 15px; border-radius: 6px; border: 1px solid #ccc;" onchange="if(typeof updateCalendar === 'function') updateCalendar();">
+                    <option value="Asia/Jakarta">Asia/Jakarta (GMT +7:00)</option>
+                    <option value="Europe/Madrid">Europe/Madrid (GMT +1:00)</option>
+                    <option value="America/New_York">America/New_York (GMT -5:00)</option>
+                    <option value="Asia/Kuala_Lumpur">Asia/Kuala_Lumpur (GMT +8:00)</option>
+                    <option value="UTC">UTC (GMT +0:00)</option>
+                  </select>
+              </div>
+    
+        <h3 class="offset-bottom-30">Select a new available time</h3>
                     <div id="booking-step-1" class="step-container offset-top-66">
           <div class="calendar-container">
             <div class="calendar-header">
