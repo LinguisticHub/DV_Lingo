@@ -1,8 +1,7 @@
 <!DOCTYPE html>
-<html class="wow-animation" lang="en">
-
-<head>
-    <title>Manage your classes - DV Lingo</title>
+<html class="wow-animation
+        }
+age your classes - DV Lingo</title>
     <meta charset="utf-8">
     <meta name="format-detection" content="telephone=no">
     <meta name="viewport"
@@ -452,12 +451,7 @@
                     class="icon mdi mdi-chevron-right"></span></button>
                 <h3 id="current-range" class="calendar-title">Loading...</h3>
               </div>
-              <select id="timezone-select" class="timezone-select" onchange="updateCalendar()">
-                <option value="Europe/Madrid">Europe/Madrid (GMT +1:00)</option>
-                <option value="Asia/Kuala_Lumpur">Asia/Kuala_Lumpur (GMT +8:00)</option>
-                <option value="America/New_York">America/New_York (GMT -4:00)</option>
-                <option value="UTC">UTC (GMT +0:00)</option>
-              </select>
+              
             </div>
 
             <div id="mobile-day-picker" class="mobile-day-picker">
@@ -673,7 +667,7 @@
 
                             const colHtml = `
                                 <div class="col-md-6 col-lg-3" style="display: flex; padding-bottom: 30px;">
-                                    <div class="box-icon box-icon-bordered selectable-class-box" onclick="selectClassBox(this)" style="padding: 15px 20px; text-align: left; width: 100%; flex: 1; max-width: none; display: flex; flex-direction: column; border-radius: 10px; background: #fff; box-shadow: 0 4px 15px rgba(0,0,0,0.03);">
+                                    <div class="box-icon box-icon-bordered selectable-class-box" onclick="selectClassBox(this, `${finalDate}`, `${finalTime}`)" style="padding: 15px 20px; text-align: left; width: 100%; flex: 1; max-width: none; display: flex; flex-direction: column; border-radius: 10px; background: #fff; box-shadow: 0 4px 15px rgba(0,0,0,0.03);">
                                         <div style="flex-grow: 1; pointer-events: none;">
                                             ${detailsHtml}
                                         </div>
@@ -1080,8 +1074,17 @@
       const userTz = document.getElementById('timezone-select').value;
       const city = userTz.split('/').pop().replace(/_/g, ' ');
 
-      alert('You have selected ' + dayName + ' at ' + time + ' (' + city + ' time). Please fill out the form below with this new time to confirm your modification.');
-      document.getElementById('form-container').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      const fullDate = date.toLocaleDateString('en-US', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+      const newTimeStr = fullDate + ' at ' + time + ' (' + city + ' time)';
+      
+      const confirmMsg = "Do you want to confirm this change?\n\n" + 
+                         "Original Class: " + window.oldSelectedClassTime + "\n" +
+                         "New Class: " + newTimeStr;
+                         
+      if (confirm(confirmMsg)) {
+          alert('Please fill out the form below with your new time\n(' + newTimeStr + ')\nto finalize the modification.');
+          document.getElementById('form-container').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
     }
     
     function tryInitCalendarApis() {
