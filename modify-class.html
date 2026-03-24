@@ -432,14 +432,9 @@
                     <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; width: 100%; border-bottom: 1px solid #eee; padding-bottom: 20px;">
     <h3 style="margin-bottom: 0;">Your Scheduled Classes</h3>
     <div style="margin-top: 10px;">
-        <select id="top-timezone-select" class="timezone-select" style="padding: 8px 12px; font-size: 15px; border-radius: 6px; border: 1px solid #ccc; max-width: 100%;" onchange="if(this.value) { window.location.href = window.location.pathname + '?tz=' + this.value; } else { window.location.href = window.location.pathname; }">
-            <option value="">Original Class Time (Default)</option>
-            <option value="Europe/Madrid">Europe/Madrid (GMT +1:00)</option>
-            <option value="Asia/Jakarta">Asia/Jakarta (GMT +7:00)</option>
-            <option value="America/New_York">America/New_York (GMT -5:00)</option>
-            <option value="Asia/Kuala_Lumpur">Asia/Kuala_Lumpur (GMT +8:00)</option>
-            <option value="UTC">Universal Time (UTC)</option>
-        </select>
+        <span id="top-timezone-display" style="padding: 8px 12px; font-size: 15px; border-radius: 6px; border: 1px solid #ddd; background: #fafafa; display: inline-block;">
+            Checking timezone...
+        </span>
     </div>
 </div>
                     <div id="classes-list" class="row offset-top-30">
@@ -658,8 +653,8 @@
                                     }
                                     
                                     const localD = new Date(`${isoDate}T${isoTime}${offset}`);
-                                    var finalDate = "undefined";
-                                    var finalTime = "undefined";
+                                    var finalDate = "N/A";
+                                    var finalTime = "N/A";
                                     if (!isNaN(localD.getTime())) {
                                         const finalDate = localD.toLocaleDateString('en-US', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
                                         const finalTime = localD.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
