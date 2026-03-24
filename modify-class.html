@@ -442,15 +442,7 @@
                 
         <div id="calendar-wrapper" style="display: none;" class="offset-top-41">
             
-              <div style="text-align: right; margin-bottom: 20px;">
-                  <select id="timezone-select" class="timezone-select" style="padding: 8px 12px; font-size: 15px; border-radius: 6px; border: 1px solid #ccc;" onchange="if(typeof updateCalendar === 'function') updateCalendar();">
-                    <option value="Asia/Jakarta">Asia/Jakarta (GMT +7:00)</option>
-                    <option value="Europe/Madrid">Europe/Madrid (GMT +1:00)</option>
-                    <option value="America/New_York">America/New_York (GMT -5:00)</option>
-                    <option value="Asia/Kuala_Lumpur">Asia/Kuala_Lumpur (GMT +8:00)</option>
-                    <option value="UTC">UTC (GMT +0:00)</option>
-                  </select>
-              </div>
+              
         <h3 class="offset-bottom-30">Select a new available time</h3>
                     <div id="booking-step-1" class="step-container offset-top-66">
           <div class="calendar-container">
@@ -745,26 +737,7 @@
 
     // Initialize
     document.addEventListener('DOMContentLoaded', () => {
-      // Auto-detect and set browser timezone
-      const browserTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-      const select = document.getElementById('timezone-select');
-
-      let exists = false;
-      for (let i = 0; i < select.options.length; i++) {
-        if (select.options[i].value === browserTz) {
-          exists = true;
-          break;
-        }
-      }
-
-      if (!exists && browserTz) {
-        const opt = document.createElement('option');
-        opt.value = browserTz;
-        opt.text = browserTz.replace(/_/g, ' ') + ' (Detected)';
-        select.add(opt);
-      }
-
-      if (browserTz) select.value = browserTz;
+      
 
       // Real-time validation for the confirmation button
       const validateFields = () => {
@@ -974,9 +947,7 @@
     function updateCalendar() {
       const grid = document.getElementById('calendar-grid');
       const rangeEl = document.getElementById('current-range');
-      const tzEl = document.getElementById('timezone-select');
-      if (!tzEl) return;
-      const userTz = tzEl.value;
+      const userTz = Intl.DateTimeFormat().resolvedOptions().timeZone || 'Asia/Jakarta';
 
       renderMobileDayPicker(); // Update the picker state
 
@@ -1039,9 +1010,7 @@
 
     function getAvailabilityForDay(date) {
       const slots = [];
-      const tzEl = document.getElementById('timezone-select');
-      if (!tzEl) return;
-      const userTz = tzEl.value;
+      const userTz = Intl.DateTimeFormat().resolvedOptions().timeZone || 'Asia/Jakarta';
 
       // Default Availability: 09:00 - 22:00 MYT (Tutor's Time)
       for (let h = 9; h < 22; h++) {
@@ -1073,9 +1042,7 @@
       selectedTimeLabel = time;
 
       const dayName = date.toLocaleDateString('en-US', { weekday: 'long' });
-      const tzEl = document.getElementById('timezone-select');
-      if (!tzEl) return;
-      const userTz = tzEl.value;
+      const userTz = Intl.DateTimeFormat().resolvedOptions().timeZone || 'Asia/Jakarta';
       const city = userTz.split('/').pop().replace(/_/g, ' ');
 
       document.getElementById('recurring-text').innerText = `Do you want to do a class every ${dayName} at ${time} (${city} time)?`;
@@ -1102,9 +1069,7 @@
       selectedTimeLabel = time;
 
       const dayName = date.toLocaleDateString('en-US', { weekday: 'long' });
-      const tzEl = document.getElementById('timezone-select');
-      if (!tzEl) return;
-      const userTz = tzEl.value;
+      const userTz = Intl.DateTimeFormat().resolvedOptions().timeZone || 'Asia/Jakarta';
       const city = userTz.split('/').pop().replace(/_/g, ' ');
 
       const fullDate = date.toLocaleDateString('en-US', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
