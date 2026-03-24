@@ -238,11 +238,33 @@
                     .then(res => res.json())
                     .then(data => {
                         list.innerHTML = '';
+                        
+                        // Extract the teacher name from the URL path (e.g., "DV_Lingo" from ".../DV_Lingo/modify-class.html")
+                        const pathParts = window.location.pathname.split('/');
+                        let currentTeacher = 'DV_Lingo'; // Default fallback
+                        if (pathParts.length > 1) {
+                            // Find the part before modify-class.html or the last folder
+                            const fileIndex = pathParts.findIndex(p => p.includes('.html'));
+                            if (fileIndex > 0) {
+                                currentTeacher = pathParts[fileIndex - 1];
+                            } else {
+                                currentTeacher = pathParts[pathParts.length - 2] || pathParts[pathParts.length - 1]; // Fallback for trailing slash
+                            }
+                        }
+
+                        // Filter the returned classes to only show the ones belonging to this specific Teacher mapping
+                        if (data && data.length > 0) {
+                            data = data.filter(item => {
+                                const t = item['Teacher'] || item['teacher'];
+                                return !t || String(t).toLowerCase() === currentTeacher.toLowerCase();
+                            });
+                        }
+
                         if (!data || data.length === 0) {
                             list.innerHTML = `
                                 <div class="col-12 offset-top-20 text-center">
                                     <span class="mdi mdi-calendar-blank text-gray-light" style="font-size: 60px;"></span>
-                                    <p class="offset-top-20" style="font-size: 18px; color: #666;">We couldn't find any scheduled classes under the email <strong>${user.email}</strong>.</p>
+                                    <p class="offset-top-20" style="font-size: 18px; color: #666;">We couldn't find any scheduled classes for <strong>${currentTeacher}</strong> under the email <strong>${user.email}</strong>.</p>
                                 </div>
                             `;
                             return;
@@ -252,7 +274,7 @@
                             let detailsHtml = '';
                             Object.keys(item).forEach(key => {
                                 // Skip boring metadata columns
-                                if (['name', 'email', 'emailaddress', 'timestamp', 'email address'].includes(key.toLowerCase().trim())) return;
+                                if (['name', 'teacher', 'email', 'emailaddress', 'timestamp', 'email address'].includes(key.toLowerCase().trim())) return;
                                 if (item[key]) {
                                     let val = String(item[key]);
                                     
