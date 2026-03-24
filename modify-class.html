@@ -167,7 +167,19 @@
             <div class="container">
                 <h1>Change the time of your class</h1>
                 <hr class="divider bg-danger">
-                <div class="row justify-content-center offset-top-66">
+                
+                <div id="user-classes-container" class="offset-top-66 text-left" style="display: none;">
+                    <h3>Your Scheduled Classes</h3>
+                    <div id="classes-list" class="row offset-top-30">
+                        <div class="col-12 text-center" id="classes-loading">
+                            <span class="mdi mdi-loading mdi-spin text-danger" style="font-size: 40px;"></span>
+                            <p class="offset-top-10">Loading your classes...</p>
+                        </div>
+                    </div>
+                    <hr class="divider bg-danger offset-top-66 offset-bottom-66">
+                </div>
+
+                <div class="row justify-content-center offset-top-66" id="form-container">
                     <div class="col-12"
                         style="overflow: hidden; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); margin-bottom: 100px;">
                         <iframe
@@ -212,6 +224,73 @@
     </div>
     <script src="js/core.min.js"></script>
     <script src="js/script.js"></script>
-</body>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const globalUser = localStorage.getItem('dv_user');
+            const container = document.getElementById('user-classes-container');
+            const list = document.getElementById('classes-list');
 
+            if (globalUser) {
+                const user = JSON.parse(globalUser);
+                container.style.display = 'block';
+                
+                fetch(`https://script.google.com/macros/s/AKfycbzyGbrU5Rrj7ix--DQ6PD1wiS2xGNoYTVnim_Z4OSEgDdca6WwfVedVPneeDx1W_gK3/exec?email=${encodeURIComponent(user.email)}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        list.innerHTML = '';
+                        if (!data || data.length === 0) {
+                            list.innerHTML = `
+                                <div class="col-12 offset-top-20 text-center">
+                                    <span class="mdi mdi-calendar-blank text-gray-light" style="font-size: 60px;"></span>
+                                    <p class="offset-top-20" style="font-size: 18px; color: #666;">We couldn't find any scheduled classes under the email <strong>${user.email}</strong>.</p>
+                                </div>
+                            `;
+                            return;
+                        }
+                        
+                        data.forEach(item => {
+                            let detailsHtml = '';
+                            Object.keys(item).forEach(key => {
+                                // Skip boring metadata columns
+                                if (['name', 'email', 'emailaddress', 'timestamp', 'email address'].includes(key.toLowerCase().trim())) return;
+                                if (item[key]) {
+                                    // Use format "MMM DD, YYYY" for dates, or just raw string if parsing fails
+                                    const val = String(item[key]);
+                                    detailsHtml += `<p style="margin-bottom: 8px; font-size: 15px; color: #555;"><strong style="color:#333;">${key}:</strong> ${val}</p>`;
+                                }
+                            });
+
+                            const colHtml = `
+                                <div class="col-md-6 col-lg-4 offset-bottom-30">
+                                    <div class="box-icon box-icon-bordered" style="padding: 25px 20px; text-align: left; height: 100%; border-radius: 10px; background: #fff;">
+                                        <h5 class="text-danger" style="margin-bottom: 20px; font-weight: 700; border-bottom: 1px solid #eee; padding-bottom: 15px;"><span class="mdi mdi-calendar-check" style="font-size: 24px; vertical-align: middle; margin-right: 5px;"></span> Booked Class</h5>
+                                        ${detailsHtml}
+                                    </div>
+                                </div>
+                            `;
+                            list.innerHTML += colHtml;
+                        });
+                    })
+                    .catch(err => {
+                        console.error("Error loading classes:", err);
+                        list.innerHTML = `
+                            <div class="col-12 text-center text-danger offset-top-20">
+                                <span class="mdi mdi-alert-circle-outline" style="font-size: 40px;"></span>
+                                <p class="offset-top-10">Failed to load your classes securely. Please try refreshing.</p>
+                            </div>
+                        `;
+                    });
+            } else {
+                // Not logged in
+                container.style.display = 'block';
+                list.innerHTML = `
+                    <div class="col-12 offset-top-20 text-center">
+                        <span class="mdi mdi-lock text-gray-light" style="font-size: 60px;"></span>
+                        <p class="offset-top-20" style="font-size: 18px; color: #666;">Please sign in with Google in the top menu to view your scheduled classes securely.</p>
+                    </div>
+                `;
+            }
+        });
+    </script>
+</body>
 </html>
