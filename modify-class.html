@@ -429,14 +429,7 @@
                 <hr class="divider bg-danger">
                 
                 <div id="user-classes-container" class="offset-top-66 text-left" style="display: none;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; width: 100%; border-bottom: 1px solid #eee; padding-bottom: 20px;">
-    <h3 style="margin-bottom: 0;">Your Scheduled Classes</h3>
-    <div style="margin-top: 10px;">
-        <span id="top-timezone-display" style="padding: 8px 12px; font-size: 15px; border-radius: 6px; border: 1px solid #ddd; background: #fafafa; display: inline-block;">
-            Checking timezone...
-        </span>
-    </div>
-</div>
+                    <h3>Your Scheduled Classes</h3>
                     <div id="classes-list" class="row offset-top-30">
                         <div class="col-12 text-center" id="classes-loading">
                             <span class="mdi mdi-loading mdi-spin text-danger" style="font-size: 40px;"></span>
@@ -634,16 +627,9 @@
                                 
                                 const tzLower = (rawTz || 'indonesia').toLowerCase();
                                 let iana = 'Asia/Jakarta';
-                                let countryLabel = 'Indonesia'; let utcLabel = '+7:00';
-                                if (tzLower.includes('spain') || tzLower.includes('madrid')) { iana = 'Europe/Madrid'; countryLabel = 'Spain'; utcLabel = '+1:00'; }
-                                else if (tzLower.includes('kuala') || tzLower.includes('bali')) { iana = 'Asia/Kuala_Lumpur'; countryLabel = 'Malaysia / Bali'; utcLabel = '+8:00'; }
-                                else if (tzLower.includes('york') || tzLower.includes('usa')) { iana = 'America/New_York'; countryLabel = 'USA (New York)'; utcLabel = '-5:00'; }
-
-                                const tzDisp = document.getElementById('top-timezone-display');
-                                if (tzDisp && !tzDisp.dataset.set) {
-                                    tzDisp.innerHTML = `🌍 Auto-detected timezone: <strong>${countryLabel}</strong> <span style="color:#888;">(UTC ${utcLabel})</span>`;
-                                    tzDisp.dataset.set = 'true';
-                                }
+                                if (tzLower.includes('spain') || tzLower.includes('madrid')) iana = 'Europe/Madrid';
+                                else if (tzLower.includes('kuala') || tzLower.includes('bali')) iana = 'Asia/Kuala_Lumpur';
+                                else if (tzLower.includes('york') || tzLower.includes('usa')) iana = 'America/New_York';
                                 
                                 try {
                                     const dummyDate = new Date(`${isoDate}T12:00:00Z`);
