@@ -16,7 +16,11 @@
     <link rel="stylesheet" href="css/style.css">
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <script src="js/auth.js" defer></script>
-    <style>
+    
+
+    <script src="https://apis.google.com/js/api.js"></script>
+    <script src="https://accounts.google.com/gsi/client"></script>
+  <style>
     .ie-panel {
       display: none;
       background: #212121;
@@ -341,285 +345,8 @@
     .d-none {
       display: none !important;
     }
+  </style>
 
-      border: 1px solid #dee2e6;
-      background: #fff;
-      font-size: 14px;
-      color: #666;
-      max-width: 250px;
-    }
-
-    .calendar-grid {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      gap: 0;
-      border-top: 1px solid #eee;
-    }
-
-    .day-column {
-      border-left: 1px solid #eee;
-      padding-bottom: 20px;
-    }
-
-    .day-column:last-child {
-      border-right: 1px solid #eee;
-    }
-
-    .day-header {
-      padding: 20px 10px;
-      text-align: center;
-      border-bottom: 3px solid transparent;
-      margin-bottom: 15px;
-    }
-
-    .day-header.active {
-      border-bottom-color: #d01919;
-    }
-
-    .day-name {
-      display: block;
-      font-size: 14px;
-      color: #999;
-      text-transform: uppercase;
-      margin-bottom: 5px;
-    }
-
-    .day-number {
-      display: block;
-      font-size: 20px;
-      font-weight: 500;
-      color: #333;
-    }
-
-    .slots-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 10px;
-      padding: 0 10px;
-    }
-
-    .time-slot {
-      width: 100%;
-      padding: 8px 5px;
-      text-align: center;
-      border-radius: 5px;
-      color: #d01919 !important;
-      font-weight: 500;
-      text-decoration: underline;
-      cursor: pointer;
-      transition: background 0.2s;
-      font-size: 14px;
-    }
-
-    .time-slot:hover {
-      background: #fff1f1;
-    }
-
-    .time-slot.booked {
-      color: #ccc !important;
-      text-decoration: none;
-      cursor: not-allowed;
-      pointer-events: none;
-    }
-
-    .view-full-btn {
-      display: block;
-      text-align: center;
-      margin-top: 30px;
-      color: #666;
-      font-size: 14px;
-      text-decoration: none;
-      border: 1px solid #dee2e6;
-      padding: 10px 20px;
-      border-radius: 8px;
-      width: fit-content;
-      margin-left: auto;
-      margin-right: auto;
-    }
-
-    .mobile-day-picker {
-      display: none;
-      justify-content: space-between;
-      overflow-x: auto;
-      padding: 10px 0;
-      margin-bottom: 20px;
-      gap: 10px;
-      -webkit-overflow-scrolling: touch;
-      scrollbar-width: none;
-    }
-
-    .mobile-day-picker::-webkit-scrollbar {
-      display: none;
-    }
-
-    .day-pill {
-      flex: 1;
-      min-width: 50px;
-      padding: 8px 5px;
-      border-radius: 12px;
-      text-align: center;
-      background: #f8f9fa;
-      border: 1px solid #eee;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .day-pill.active {
-      background: #dc3545;
-      color: #fff;
-      border-color: #dc3545;
-    }
-
-    .day-pill .s-day {
-      font-size: 10px;
-      display: block;
-      text-transform: uppercase;
-    }
-
-    .day-pill .s-num {
-      font-size: 16px;
-      font-weight: bold;
-      display: block;
-    }
-
-    @media (max-width: 991px) {
-      .calendar-grid {
-        grid-template-columns: 1fr;
-        border: none;
-      }
-
-      .day-column {
-        border: 1px solid #eee;
-        border-radius: 10px;
-        margin-bottom: 20px;
-        display: none;
-      }
-
-      .day-column.mobile-visible {
-        display: block;
-        border-left: 1px solid #eee !important;
-        border-right: 1px solid #eee !important;
-      }
-
-      .mobile-day-picker {
-        display: flex;
-      }
-
-      .day-header {
-        border-bottom: none;
-      }
-    }
-
-    /* Duration Selector */
-    .btn-group-custom {
-      display: flex;
-      gap: 15px;
-      justify-content: center;
-      margin-bottom: 30px;
-    }
-
-    .duration-btn {
-      min-width: 150px;
-      padding: 15px 25px;
-      border: 2px solid #eee !important;
-      border-radius: 12px;
-      font-weight: 600;
-      transition: all 0.3s;
-      background: #fff;
-      color: #333;
-      cursor: pointer;
-    }
-
-    .duration-btn.active {
-      border-color: #dc3545 !important;
-      background: #dc3545 !important;
-      color: #fff !important;
-    }
-
-    /* Step Transition */
-    .step-container {
-      transition: opacity 0.3s ease;
-    }
-
-    .d-none {
-      display: none !important;
-    }
-  
-
-        .ie-panel {
-            display: none;
-            background: #212121;
-            padding: 10px 0;
-            box-shadow: 3px 3px 5px 0 rgba(0, 0, 0, .3);
-            clear: both;
-            text-align: center;
-            position: relative;
-            z-index: 1;
-        }
-
-        @media (max-width: 767px) {
-            iframe {
-                height: 2500px !important;
-            }
-
-            .rd-navbar-panel {
-                position: relative;
-            }
-
-            .rd-navbar-brand {
-                display: block !important;
-                position: absolute;
-                left: 50%;
-                top: 55%;
-                /* Moved lower to align with hamburger */
-                transform: translate(-50%, -50%);
-            }
-
-            .rd-navbar-brand img {
-                width: 50px !important;
-                height: auto !important;
-            }
-        }
-
-
-
-        html.ie-10 .ie-panel,
-        html.lt-ie-10 .ie-panel {
-            display: block;
-        }
-
-        /* Custom overrides from index */
-        .context-dark.bg-danger,
-        .context-dark.bg-danger:before,
-        .context-dark.bg-danger:after {
-            background-color: #d01919 !important;
-            background: #d01919 !important;
-        }
-
-        /* Primary Red */
-        .btn-danger {
-            background-color: #d01919;
-            border-color: #d01919;
-        }
-
-        /* Accent Darker Red */
-        .btn-danger:hover {
-            background-color: #ae1515;
-            border-color: #ae1515;
-        }
-
-        .text-danger {
-            color: #4A90E2 !important;
-        }
-
-        .rd-navbar-nav li a span {
-            text-shadow: 1px 1px 0 #000, -1px 1px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000;
-        }
-    </style>
-
-    <script src="https://apis.google.com/js/api.js"></script>
-    <script src="https://accounts.google.com/gsi/client"></script>
 </head>
 
 <body>
@@ -875,6 +602,7 @@
                             const rawDate = getVal('date');
                             const rawHour = getVal('hour') || getVal('time');
                             const rawTz = getVal('timezone');
+                            const rawDuration = getVal('minute') || getVal('duration') || getVal('minutes');
                             
                             let dateRendered = false;
 
@@ -918,7 +646,12 @@
                                         const finalTime = localD.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
                                         
                                         detailsHtml += `<p style="margin-bottom: 8px; font-size: 15px; color: #555;"><strong style="color:#d01919;">Date:</strong> ${finalDate}</p>
-                                                        <p style="margin-bottom: 12px; font-size: 15px; color: #555;"><strong style="color:#d01919;">Time:</strong> ${finalTime}</p>`;
+                                                        <p style="margin-bottom: ${rawDuration ? '8px' : '12px'}; font-size: 15px; color: #555;"><strong style="color:#d01919;">Time:</strong> ${finalTime}</p>`;
+                                        
+                                        if (rawDuration) {
+                                            detailsHtml += `<p style="margin-bottom: 12px; font-size: 15px; color: #555;"><strong style="color:#d01919;">Duration:</strong> ${rawDuration} minutes</p>`;
+                                        }
+
                                         dateRendered = true;
                                     }
                                 } catch(e) { console.warn("Timezone parsing failed", e); }
@@ -930,7 +663,7 @@
                                 if (['name', 'teacher', 'email', 'emailaddress', 'timestamp', 'email address'].includes(kl)) return;
                                 
                                 // Skip the ones we just explicitly combined, unless rendering failed
-                                if (dateRendered && (kl.includes('date') || kl.includes('hour') || kl.includes('time') || kl.includes('timezone'))) return;
+                                if (dateRendered && (kl.includes('date') || kl.includes('hour') || kl.includes('time') || kl.includes('timezone') || kl.includes('minute') || kl.includes('duration'))) return;
                                 
                                 if (item[key]) {
                                     let val = String(item[key]);
