@@ -622,8 +622,19 @@
                                     if (p[2] && p[2].length === 4) isoDate = `${p[2]}-${p[1]}-${p[0]}`;
                                 }
                                 
+                                let rawTime = rawHour.toUpperCase().trim();
                                 let isoTime = rawHour;
-                                if (rawHour.length === 5) isoTime += ':00'; // "03:00" -> "03:00:00"
+                                if (rawTime.includes('PM') || rawTime.includes('AM')) {
+                                    let parts = rawTime.replace('PM','').replace('AM','').trim().split(':');
+                                    let hours = parseInt(parts[0]);
+                                    let mins = parts[1] || '00';
+                                    if (rawTime.includes('PM') && hours < 12) hours += 12;
+                                    if (rawTime.includes('AM') && hours === 12) hours = 0;
+                                    isoTime = hours.toString().padStart(2, '0') + ':' + mins + ':00';
+                                } else {
+                                    if (isoTime.length === 5) isoTime += ':00'; // "03:00" -> "03:00:00"
+                                    else if (isoTime.length === 4) isoTime = '0' + isoTime + ':00';
+                                }
                                 
                                 const tzLower = (rawTz || 'indonesia').toLowerCase();
                                 let iana = 'Asia/Jakarta';
