@@ -634,9 +634,16 @@
                                 
                                 const tzLower = (rawTz || 'indonesia').toLowerCase();
                                 let iana = 'Asia/Jakarta';
-                                if (tzLower.includes('spain') || tzLower.includes('madrid')) iana = 'Europe/Madrid';
-                                else if (tzLower.includes('kuala') || tzLower.includes('bali')) iana = 'Asia/Kuala_Lumpur';
-                                else if (tzLower.includes('york') || tzLower.includes('usa')) iana = 'America/New_York';
+                                let countryLabel = 'Indonesia'; let utcLabel = '+7:00';
+                                if (tzLower.includes('spain') || tzLower.includes('madrid')) { iana = 'Europe/Madrid'; countryLabel = 'Spain'; utcLabel = '+1:00'; }
+                                else if (tzLower.includes('kuala') || tzLower.includes('bali')) { iana = 'Asia/Kuala_Lumpur'; countryLabel = 'Malaysia / Bali'; utcLabel = '+8:00'; }
+                                else if (tzLower.includes('york') || tzLower.includes('usa')) { iana = 'America/New_York'; countryLabel = 'USA (New York)'; utcLabel = '-5:00'; }
+
+                                const tzDisp = document.getElementById('top-timezone-display');
+                                if (tzDisp && !tzDisp.dataset.set) {
+                                    tzDisp.innerHTML = `🌍 Auto-detected timezone: <strong>${countryLabel}</strong> <span style="color:#888;">(UTC ${utcLabel})</span>`;
+                                    tzDisp.dataset.set = 'true';
+                                }
                                 
                                 try {
                                     const dummyDate = new Date(`${isoDate}T12:00:00Z`);
@@ -1035,7 +1042,9 @@
 
     function getAvailabilityForDay(date) {
       const slots = [];
-      const userTz = document.getElementById('timezone-select').value;
+      const tzEl = document.getElementById('timezone-select');
+      if (!tzEl) return;
+      const userTz = tzEl.value;
 
       // Default Availability: 09:00 - 22:00 MYT (Tutor's Time)
       for (let h = 9; h < 22; h++) {
@@ -1067,7 +1076,9 @@
       selectedTimeLabel = time;
 
       const dayName = date.toLocaleDateString('en-US', { weekday: 'long' });
-      const userTz = document.getElementById('timezone-select').value;
+      const tzEl = document.getElementById('timezone-select');
+      if (!tzEl) return;
+      const userTz = tzEl.value;
       const city = userTz.split('/').pop().replace(/_/g, ' ');
 
       document.getElementById('recurring-text').innerText = `Do you want to do a class every ${dayName} at ${time} (${city} time)?`;
@@ -1094,7 +1105,9 @@
       selectedTimeLabel = time;
 
       const dayName = date.toLocaleDateString('en-US', { weekday: 'long' });
-      const userTz = document.getElementById('timezone-select').value;
+      const tzEl = document.getElementById('timezone-select');
+      if (!tzEl) return;
+      const userTz = tzEl.value;
       const city = userTz.split('/').pop().replace(/_/g, ' ');
 
       const fullDate = date.toLocaleDateString('en-US', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
