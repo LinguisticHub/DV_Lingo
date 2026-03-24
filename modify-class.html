@@ -547,7 +547,9 @@
     <script src="js/core.min.js"></script>
     <script src="js/script.js"></script>
     <script>
-        function selectClassBox(el) {
+        window.oldSelectedClassTime = "";
+        function selectClassBox(el, dateStr, timeStr) {
+            window.oldSelectedClassTime = dateStr + " at " + timeStr;
             document.querySelectorAll('.selectable-class-box').forEach(box => {
                 box.classList.remove('selected');
             });
@@ -1091,7 +1093,7 @@
       const newTimeStr = fullDate + ' at ' + time + ' (' + city + ' time)';
       
       const confirmMsg = "Do you want to confirm this change?\n\n" + 
-                         "Original Class: " + window.oldSelectedClassTime + "\n" +
+                         
                          "New Class: " + newTimeStr;
                          
       if (confirm(confirmMsg)) {
