@@ -538,7 +538,8 @@
     <script src="js/core.min.js"></script>
     <script src="js/script.js"></script>
     <script>
-        function selectClassBox(el) {
+        function selectClassBox(el, finalDate, finalTime) {
+            window.oldSelectedClassTime = finalDate + " at " + finalTime;
             document.querySelectorAll('.selectable-class-box').forEach(box => {
                 box.classList.remove('selected');
             });
@@ -1080,8 +1081,38 @@
                          "New Class: " + newTimeStr;
                          
       if (confirm(confirmMsg)) {
-          alert('Please fill out the form below with your new time\n(' + newTimeStr + ')\nto finalize the modification.');
-          document.getElementById('form-container').scrollIntoView({ behavior: 'smooth', block: 'start' });
+          const globalUser = localStorage.getItem('dv_user');
+          const user = globalUser ? JSON.parse(globalUser) : { name: 'Unknown User', email: 'unknown@example.com' };
+          const userName = user.given_name ? (user.given_name + ' ' + (user.family_name || '')).trim() : (user.name || 'Unknown User');
+          
+          let currentTeacher = 'DV_Lingo'; // Default fallback
+          const pathParts = window.location.pathname.split('/');
+          if (pathParts.length > 1) {
+              const fileIndex = pathParts.findIndex(p => p.includes('.html'));
+              if (fileIndex > 0) {
+                  currentTeacher = pathParts[fileIndex - 1];
+              } else {
+                  currentTeacher = pathParts[pathParts.length - 2] || pathParts[pathParts.length - 1];
+              }
+          }
+
+          const payload = {
+              fecha_hora_original: window.oldSelectedClassTime || "No seleccionada",
+              fecha_hora_nueva: newTimeStr,
+              nombre_usuario: userName,
+              email_usuario: user.email || 'unknown@example.com',
+              nombre_repositorio: currentTeacher
+          };
+          
+          fetch('https://hooks.zapier.com/hooks/catch/17528811/upj32vm/', {
+              method: 'POST',
+              body: JSON.stringify(payload)
+          }).then(res => {
+              alert('¡Modificación solicitada correctamente! Gracias.');
+              window.location.reload();
+          }).catch(err => {
+              alert('Error conectando con el servidor: ' + err.message);
+          });
       }
     }
     
