@@ -256,11 +256,18 @@
                                 if (item[key]) {
                                     let val = String(item[key]);
                                     
-                                    // Parse generic Date format to remove Time
-                                    if (key.toLowerCase().includes('date') || val.includes(' at ')) {
-                                        if (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/.test(val)) {
-                                            val = new Date(val).toLocaleDateString('en-US', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
-                                        } else if (val.includes(' at ')) {
+                                    // Parse ISO Date and Time objects
+                                    if (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/.test(val)) {
+                                        const d = new Date(val);
+                                        // If the year is 1899, Google Sheets is passing a Time-only value
+                                        if (d.getFullYear() === 1899 || d.getFullYear() === 1970) {
+                                            val = d.toLocaleTimeString('en-US', { timeZone: 'UTC', hour: 'numeric', minute: '2-digit' });
+                                        } else {
+                                            // Regular date, we format it nicely omitting the time
+                                            val = d.toLocaleDateString('en-US', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+                                        }
+                                    } else if (key.toLowerCase().includes('date') || val.includes(' at ')) {
+                                        if (val.includes(' at ')) {
                                             val = val.split(' at ')[0].trim();
                                         }
                                     }
@@ -271,7 +278,7 @@
 
                             const colHtml = `
                                 <div class="col-md-6 col-lg-4 offset-bottom-30" style="display: flex;">
-                                    <div class="box-icon box-icon-bordered" style="padding: 25px 20px; text-align: left; width: 100%; height: auto; display: flex; flex-direction: column; border-radius: 10px; background: #fff; box-shadow: 0 4px 15px rgba(0,0,0,0.03);">
+                                    <div class="box-icon box-icon-bordered" style="padding: 25px 20px; text-align: left; width: 100%; flex: 1; max-width: none; display: flex; flex-direction: column; border-radius: 10px; background: #fff; box-shadow: 0 4px 15px rgba(0,0,0,0.03);">
                                         <h5 class="text-danger" style="margin-bottom: 20px; font-weight: 700; border-bottom: 1px solid #eee; padding-bottom: 15px;"><span class="mdi mdi-calendar-check" style="font-size: 24px; vertical-align: middle; margin-right: 5px;"></span> Booked Class</h5>
                                         <div style="flex-grow: 1;">
                                             ${detailsHtml}
