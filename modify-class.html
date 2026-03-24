@@ -429,7 +429,19 @@
                 <hr class="divider bg-danger">
                 
                 <div id="user-classes-container" class="offset-top-66 text-left" style="display: none;">
-                    <h3>Your Scheduled Classes</h3>
+                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; width: 100%; border-bottom: 1px solid #eee; padding-bottom: 20px;">
+    <h3 style="margin-bottom: 0;">Your Scheduled Classes</h3>
+    <div style="margin-top: 10px;">
+        <select id="top-timezone-select" class="timezone-select" style="padding: 8px 12px; font-size: 15px; border-radius: 6px; border: 1px solid #ccc; max-width: 100%;" onchange="if(this.value) { window.location.href = window.location.pathname + '?tz=' + this.value; } else { window.location.href = window.location.pathname; }">
+            <option value="">Original Class Time (Default)</option>
+            <option value="Europe/Madrid">Europe/Madrid (GMT +1:00)</option>
+            <option value="Asia/Jakarta">Asia/Jakarta (GMT +7:00)</option>
+            <option value="America/New_York">America/New_York (GMT -5:00)</option>
+            <option value="Asia/Kuala_Lumpur">Asia/Kuala_Lumpur (GMT +8:00)</option>
+            <option value="UTC">Universal Time (UTC)</option>
+        </select>
+    </div>
+</div>
                     <div id="classes-list" class="row offset-top-30">
                         <div class="col-12 text-center" id="classes-loading">
                             <span class="mdi mdi-loading mdi-spin text-danger" style="font-size: 40px;"></span>
@@ -451,7 +463,7 @@
                     <option value="UTC">UTC (GMT +0:00)</option>
                   </select>
               </div>
-\n        <h3 class="offset-bottom-30">Select a new available time</h3>
+        <h3 class="offset-bottom-30">Select a new available time</h3>
                     <div id="booking-step-1" class="step-container offset-top-66">
           <div class="calendar-container">
             <div class="calendar-header">
@@ -646,9 +658,11 @@
                                     }
                                     
                                     const localD = new Date(`${isoDate}T${isoTime}${offset}`);
+                                    var finalDate = "undefined";
+                                    var finalTime = "undefined";
                                     if (!isNaN(localD.getTime())) {
-                                        var finalDate = localD.toLocaleDateString('en-US', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
-                                        var finalTime = localD.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+                                        const finalDate = localD.toLocaleDateString('en-US', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+                                        const finalTime = localD.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
                                         
                                         detailsHtml += `<p style="margin-bottom: 8px; font-size: 15px; color: #555;"><strong style="color:#d01919;">Date:</strong> ${finalDate}</p>
                                                         <p style="margin-bottom: ${rawDuration ? '8px' : '12px'}; font-size: 15px; color: #555;"><strong style="color:#d01919;">Time:</strong> ${finalTime}</p>`;
@@ -678,7 +692,7 @@
 
                             const colHtml = `
                                 <div class="col-md-6 col-lg-3" style="display: flex; padding-bottom: 30px;">
-                                    <div class="box-icon box-icon-bordered selectable-class-box" onclick="selectClassBox(this, \'${finalDate}\', \'${finalTime}\')" style="padding: 15px 20px; text-align: left; width: 100%; flex: 1; max-width: none; display: flex; flex-direction: column; border-radius: 10px; background: #fff; box-shadow: 0 4px 15px rgba(0,0,0,0.03);">
+                                    <div class="box-icon box-icon-bordered selectable-class-box" onclick="selectClassBox(this, '${finalDate}', '${finalTime}')" style="padding: 15px 20px; text-align: left; width: 100%; flex: 1; max-width: none; display: flex; flex-direction: column; border-radius: 10px; background: #fff; box-shadow: 0 4px 15px rgba(0,0,0,0.03);">
                                         <div style="flex-grow: 1; pointer-events: none;">
                                             ${detailsHtml}
                                         </div>
@@ -694,6 +708,7 @@
                             <div class="col-12 text-center text-danger offset-top-20">
                                 <span class="mdi mdi-alert-circle-outline" style="font-size: 40px;"></span>
                                 <p class="offset-top-10">Failed to load your classes securely. Please try refreshing.</p>
+                                <p style="color:#d01919;font-size:12px;text-align:left;padding:20px;word-break:break-all;">${err.stack || err.toString()}</p>
                             </div>
                         `;
                     });
@@ -960,7 +975,9 @@
     function updateCalendar() {
       const grid = document.getElementById('calendar-grid');
       const rangeEl = document.getElementById('current-range');
-      const userTz = document.getElementById('timezone-select').value;
+      const tzEl = document.getElementById('timezone-select');
+      if (!tzEl) return;
+      const userTz = tzEl.value;
 
       renderMobileDayPicker(); // Update the picker state
 
