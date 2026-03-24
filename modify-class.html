@@ -254,17 +254,28 @@
                                 // Skip boring metadata columns
                                 if (['name', 'email', 'emailaddress', 'timestamp', 'email address'].includes(key.toLowerCase().trim())) return;
                                 if (item[key]) {
-                                    // Use format "MMM DD, YYYY" for dates, or just raw string if parsing fails
-                                    const val = String(item[key]);
-                                    detailsHtml += `<p style="margin-bottom: 8px; font-size: 15px; color: #555;"><strong style="color:#333;">${key}:</strong> ${val}</p>`;
+                                    let val = String(item[key]);
+                                    
+                                    // Parse generic Date format to remove Time
+                                    if (key.toLowerCase().includes('date') || val.includes(' at ')) {
+                                        if (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/.test(val)) {
+                                            val = new Date(val).toLocaleDateString('en-US', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+                                        } else if (val.includes(' at ')) {
+                                            val = val.split(' at ')[0].trim();
+                                        }
+                                    }
+
+                                    detailsHtml += `<p style="margin-bottom: 8px; font-size: 15px; color: #555;"><strong style="color:#333; text-transform: capitalize;">${key.replace(/_/g, ' ')}:</strong> ${val}</p>`;
                                 }
                             });
 
                             const colHtml = `
-                                <div class="col-md-6 col-lg-4 offset-bottom-30">
-                                    <div class="box-icon box-icon-bordered" style="padding: 25px 20px; text-align: left; height: 100%; border-radius: 10px; background: #fff;">
+                                <div class="col-md-6 col-lg-4 offset-bottom-30" style="display: flex;">
+                                    <div class="box-icon box-icon-bordered" style="padding: 25px 20px; text-align: left; width: 100%; height: auto; display: flex; flex-direction: column; border-radius: 10px; background: #fff; box-shadow: 0 4px 15px rgba(0,0,0,0.03);">
                                         <h5 class="text-danger" style="margin-bottom: 20px; font-weight: 700; border-bottom: 1px solid #eee; padding-bottom: 15px;"><span class="mdi mdi-calendar-check" style="font-size: 24px; vertical-align: middle; margin-right: 5px;"></span> Booked Class</h5>
-                                        ${detailsHtml}
+                                        <div style="flex-grow: 1;">
+                                            ${detailsHtml}
+                                        </div>
                                     </div>
                                 </div>
                             `;
