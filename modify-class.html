@@ -316,10 +316,9 @@
                                     if (!isNaN(localD.getTime())) {
                                         const finalDate = localD.toLocaleDateString('en-US', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
                                         const finalTime = localD.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
-                                        const visitorTz = Intl.DateTimeFormat().resolvedOptions().timeZone.split('/').pop().replace(/_/g, ' ');
                                         
-                                        detailsHtml += `<p style="margin-bottom: 8px; font-size: 15px; color: #555;"><strong style="color:#d01919;">Local Date:</strong> ${finalDate}</p>
-                                                        <p style="margin-bottom: 12px; font-size: 15px; color: #555;"><strong style="color:#d01919;">Local Time:</strong> ${finalTime} <span style="font-size:12px;color:#999;">(${visitorTz})</span></p>`;
+                                        detailsHtml += `<p style="margin-bottom: 8px; font-size: 15px; color: #555;"><strong style="color:#d01919;">Date:</strong> ${finalDate}</p>
+                                                        <p style="margin-bottom: 12px; font-size: 15px; color: #555;"><strong style="color:#d01919;">Time:</strong> ${finalTime}</p>`;
                                         dateRendered = true;
                                     }
                                 } catch(e) { console.warn("Timezone parsing failed", e); }
