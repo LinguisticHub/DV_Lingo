@@ -568,8 +568,9 @@
   <script src="js/script.js"></script>
   <script>
     const CALENDAR_ID = "orimazes@gmail.com";
-
-    // GOOGLE_CLIENT_ID is now handled in auth.js
+    const GOOGLE_CLIENT_ID = "304890634707-otis8fk3c7oqc2480c3s41vbai5ibfpm.apps.googleusercontent.com";
+    const ICS_URL = "https://calendar.google.com/calendar/ical/orimazes%40gmail.com/public/basic.ics";
+    const TUTOR_TIMEZONE = "Asia/Kuala_Lumpur";
 
     let tokenClient;
     let gapiInited = false;
@@ -666,7 +667,7 @@
     function gisLoaded() {
       // Use global client_id for authorization token
       tokenClient = google.accounts.oauth2.initTokenClient({
-        client_id: "304890634707-otis8fk3c7oqc2480c3s41vbai5ibfpm.apps.googleusercontent.com",
+        client_id: GOOGLE_CLIENT_ID,
         scope: 'https://www.googleapis.com/auth/calendar.readonly',
         callback: '', // defined later
       });
