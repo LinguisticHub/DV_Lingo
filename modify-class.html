@@ -222,9 +222,38 @@
             </div>
         </footer>
     </div>
+    <style>
+        .selectable-class-box {
+            cursor: pointer;
+            transition: all 0.2s ease-in-out !important;
+        }
+        .selectable-class-box:hover {
+            box-shadow: 0 8px 25px rgba(208, 25, 25, 0.2) !important;
+            transform: translateY(-3px);
+            border-color: #d01919 !important;
+        }
+        .selectable-class-box.selected {
+            background-color: #d01919 !important;
+            border-color: #d01919 !important;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(208, 25, 25, 0.3) !important;
+        }
+        .selectable-class-box.selected p,
+        .selectable-class-box.selected strong,
+        .selectable-class-box.selected span {
+            color: #fff !important;
+        }
+    </style>
     <script src="js/core.min.js"></script>
     <script src="js/script.js"></script>
     <script>
+        function selectClassBox(el) {
+            document.querySelectorAll('.selectable-class-box').forEach(box => {
+                box.classList.remove('selected');
+            });
+            el.classList.add('selected');
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             const globalUser = localStorage.getItem('dv_user');
             const container = document.getElementById('user-classes-container');
@@ -340,8 +369,8 @@
 
                             const colHtml = `
                                 <div class="col-md-6 col-lg-3" style="display: flex; padding-bottom: 30px;">
-                                    <div class="box-icon box-icon-bordered" style="padding: 15px 20px; text-align: left; width: 100%; flex: 1; max-width: none; display: flex; flex-direction: column; border-radius: 10px; background: #fff; box-shadow: 0 4px 15px rgba(0,0,0,0.03);">
-                                        <div style="flex-grow: 1;">
+                                    <div class="box-icon box-icon-bordered selectable-class-box" onclick="selectClassBox(this)" style="padding: 15px 20px; text-align: left; width: 100%; flex: 1; max-width: none; display: flex; flex-direction: column; border-radius: 10px; background: #fff; box-shadow: 0 4px 15px rgba(0,0,0,0.03);">
+                                        <div style="flex-grow: 1; pointer-events: none;">
                                             ${detailsHtml}
                                         </div>
                                     </div>
