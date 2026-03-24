@@ -627,10 +627,17 @@
         autoFillBookingForm(JSON.parse(globalUser));
       }
 
-      gapiLoaded();
-      gisLoaded();
-
       updateCalendar();
+
+      function tryInitCalendarApis() {
+        if (typeof gapi !== 'undefined' && typeof google !== 'undefined') {
+          gapiLoaded();
+          gisLoaded();
+        } else {
+          setTimeout(tryInitCalendarApis, 500);
+        }
+      }
+      tryInitCalendarApis();
     });
 
     function showStep(step) {
