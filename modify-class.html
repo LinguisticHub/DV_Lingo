@@ -451,8 +451,7 @@
                     <option value="UTC">UTC (GMT +0:00)</option>
                   </select>
               </div>
-    
-        <h3 class="offset-bottom-30">Select a new available time</h3>
+\n        <h3 class="offset-bottom-30">Select a new available time</h3>
                     <div id="booking-step-1" class="step-container offset-top-66">
           <div class="calendar-container">
             <div class="calendar-header">
@@ -547,9 +546,7 @@
     <script src="js/core.min.js"></script>
     <script src="js/script.js"></script>
     <script>
-        window.oldSelectedClassTime = "";
-        function selectClassBox(el, dateStr, timeStr) {
-            window.oldSelectedClassTime = dateStr + " at " + timeStr;
+        function selectClassBox(el) {
             document.querySelectorAll('.selectable-class-box').forEach(box => {
                 box.classList.remove('selected');
             });
@@ -585,113 +582,9 @@
                         fetch(`https://script.google.com/macros/s/AKfycbzyGbrU5Rrj7ix--DQ6PD1wiS2xGNoYTVnim_Z4OSEgDdca6WwfVedVPneeDx1W_gK3/exec?email=${encodeURIComponent(user.email)}&teacher=${encodeURIComponent(currentTeacher)}`)
                             .then(res => res.json())
                             .then(data => {
-                                list.innerHTML = '';
-                                
-                                if (!data || data.length === 0) {
-                                    list.innerHTML = `
-                                        <div class="col-12 offset-top-20 text-center">
-                                            <span class="mdi mdi-calendar-blank text-gray-light" style="font-size: 60px;"></span>
-                                            <p class="offset-top-20" style="font-size: 18px; color: #666;">We couldn't find any scheduled classes for <strong>${currentTeacher}</strong> under the email <strong>${user.email}</strong>.</p>
-                                        </div>
-                                    `;
-                                    return;
-                                }
-                        
-                        data.forEach(item => {
-                            let detailsHtml = '';
-                            
-                            // Find specific keys case-insensitively
-                            const keys = Object.keys(item);
-                            const getVal = (search) => {
-                                const k = keys.find(k => k.toLowerCase().includes(search));
-                                return k ? String(item[k]).trim() : '';
-                            };
-                            
-                            const rawDate = getVal('date');
-                            const rawHour = getVal('hour') || getVal('time');
-                            const rawTz = getVal('timezone');
-                            var rawDuration = getVal('minute') || getVal('duration') || getVal('minutes');
-                            var rawDuration = getVal('minute') || getVal('duration') || getVal('minutes');
-                            
-                            let dateRendered = false;
-
-                            // If we have Date and Hour, attempt timezone conversion
-                            if (rawDate && rawHour && rawDate.indexOf('T') === -1) {
-                                let isoDate = rawDate;
-                                if (rawDate.includes('-')) {
-                                    const p = rawDate.split('-');
-                                    if (p[2] && p[2].length === 4) isoDate = `${p[2]}-${p[1]}-${p[0]}`;
-                                } else if (rawDate.includes('/')) {
-                                    const p = rawDate.split('/');
-                                    if (p[2] && p[2].length === 4) isoDate = `${p[2]}-${p[1]}-${p[0]}`;
-                                }
-                                
-                                let isoTime = rawHour;
-                                if (rawHour.length === 5) isoTime += ':00'; // "03:00" -> "03:00:00"
-                                
-                                const tzLower = (rawTz || 'indonesia').toLowerCase();
-                                let iana = 'Asia/Jakarta';
-                                if (tzLower.includes('spain') || tzLower.includes('madrid')) iana = 'Europe/Madrid';
-                                else if (tzLower.includes('kuala') || tzLower.includes('bali')) iana = 'Asia/Kuala_Lumpur';
-                                else if (tzLower.includes('york') || tzLower.includes('usa')) iana = 'America/New_York';
-                                
-                                try {
-                                    const dummyDate = new Date(`${isoDate}T12:00:00Z`);
-                                    let offset = '+00:00';
-                                    const parts = new Intl.DateTimeFormat('en-US', { timeZone: iana, timeZoneName: 'shortOffset' }).formatToParts(dummyDate);
-                                    const tzPart = parts.find(p => p.type === 'timeZoneName');
-                                    if (tzPart && tzPart.value) {
-                                        let val = tzPart.value.replace('GMT', '').replace('UTC', '');
-                                        if (!val) val = '+00:00';
-                                        else if (val.indexOf(':') === -1) val += ':00'; 
-                                        if (val.length === 5 && val.indexOf('+') === 0) val = val.replace('+', '+0'); 
-                                        if (val.length === 5 && val.indexOf('-') === 0) val = val.replace('-', '-0'); 
-                                        offset = val;
-                                    }
-                                    
-                                    const localD = new Date(`${isoDate}T${isoTime}${offset}`);
-                                    if (!isNaN(localD.getTime())) {
-                                        finalDateStr = localD.toLocaleDateString('en-US', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
-                                        finalTimeStr = localD.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
-                                        
-                                        detailsHtml += `<p style="margin-bottom: 8px; font-size: 15px; color: #555;"><strong style="color:#d01919;">Date:</strong> ${finalDateStr}</p>
-                                                        <p style="margin-bottom: ${rawDuration ? '8px' : '12px'}; font-size: 15px; color: #555;"><strong style="color:#d01919;">Time:</strong> ${finalTimeStr}</p>`;
-                                        
-                                        if (rawDuration) {
-                                            detailsHtml += `<p style="margin-bottom: 12px; font-size: 15px; color: #555;"><strong style="color:#d01919;">Duration:</strong> ${rawDuration} minutes</p>`;
-                                        }
-
-                                        dateRendered = true;
-                                    }
-                                } catch(e) { console.warn("Timezone parsing failed", e); }
-                            }
-
-                            keys.forEach(key => {
-                                // Skip boring metadata columns
-                                const kl = key.toLowerCase().trim();
-                                if (['name', 'teacher', 'email', 'emailaddress', 'timestamp', 'email address'].includes(kl)) return;
-                                
-                                // Skip the ones we just explicitly combined, unless rendering failed
-                                if (dateRendered && (kl.includes('date') || kl.includes('hour') || kl.includes('time') || kl.includes('timezone') || kl.includes('minute') || kl.includes('duration'))) return;
-                                
-                                if (item[key]) {
-                                    let val = String(item[key]);
-                                    detailsHtml += `<p style="margin-bottom: 8px; font-size: 15px; color: #555;"><strong style="color:#333; text-transform: capitalize;">${key.replace(/_/g, ' ')}:</strong> ${val}</p>`;
-                                }
-                            });
-
-                            const colHtml = `
-                                <div class="col-md-6 col-lg-3" style="display: flex; padding-bottom: 30px;">
-                                    <div class="box-icon box-icon-bordered selectable-class-box" onclick="selectClassBox(this, '${finalDateStr}', '${finalTimeStr}')" style="padding: 15px 20px; text-align: left; width: 100%; flex: 1; max-width: none; display: flex; flex-direction: column; border-radius: 10px; background: #fff; box-shadow: 0 4px 15px rgba(0,0,0,0.03);">
-                                        <div style="flex-grow: 1; pointer-events: none;">
-                                            ${detailsHtml}
-                                        </div>
-                                    </div>
-                                </div>
-                            `;
-                            list.innerHTML += colHtml;
-                        });
-                    })
+            window.fetchedClassData = data;
+            window.renderClasses();
+        })
                     .catch(err => {
                         console.error("Error loading classes:", err);
                         list.innerHTML = `
@@ -784,6 +677,24 @@
         }
       }
       tryInitCalendarApis();
+
+    window.renderClasses = function() {
+        const list = document.getElementById('classes-list');
+        const data = window.fetchedClassData;
+        if (!data || !list) return;
+        
+        list.innerHTML = '';
+        
+                              
+                                
+    };
+    
+    window.updateClassBoxes = function() {
+        if (window.fetchedClassData) {
+            window.renderClasses();
+        }
+    };
+
     });
 
     function showStep(step) {
