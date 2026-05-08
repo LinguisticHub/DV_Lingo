@@ -593,6 +593,8 @@
                             const rawTz = getVal('timezone');
                             var rawDuration = getVal('minute') || getVal('duration') || getVal('minutes');
                             
+                            if (rawDate && rawDate.includes('T') && new Date(rawDate).getTime() < Date.now()) return;
+
                             let dateRendered = false;
 
                             // If we have Date and Hour, attempt timezone conversion
@@ -644,6 +646,7 @@
                                     var finalDate = "N/A";
                                     var finalTime = "N/A";
                                     if (!isNaN(localD.getTime())) {
+                                        if (localD.getTime() < Date.now()) return; // skip past classes
                                         const finalDate = localD.toLocaleDateString('en-US', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
                                         const finalTime = localD.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
                                         
