@@ -896,12 +896,16 @@
             hour12: false
           });
 
-          // Slot is busy if it's within 12 hours from now OR overlaps with a calendar event
+          // Slot is busy if it's in the past OR overlaps with a calendar event
           const now = new Date();
           const limitTime = new Date(now.getTime() + 12 * 60 * 60 * 1000);
-          const isBusy = (slotDateUTC <= limitTime) || busyEvents.some(event => {
-            return slotDateUTC < event.end && slotEndUTC > event.start;
-          });
+          let isBusy = (slotDateUTC < now);
+          if (isToday(date) && slotDateUTC <= limitTime) {
+            isBusy = true;
+          }
+          if (busyEvents.some(event => slotDateUTC < event.end && slotEndUTC > event.start)) {
+            isBusy = true;
+          }
 
           slots.push({ timeLabel, isBusy });
         }

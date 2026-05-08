@@ -470,15 +470,6 @@
         </div>
         </div>
     
-<div class="row justify-content-center offset-top-66" id="form-container">
-                    <div class="col-12"
-                        style="overflow: hidden; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); margin-bottom: 100px;">
-                        <iframe
-                            src="https://docs.google.com/forms/d/e/1FAIpQLSdR-olXRpc4XBUiytXA75Igt65dJJ9D-vx5ZiCHINSM_aoNZQ/viewform?embedded=true"
-                            width="100%" height="1750" frameborder="0" marginheight="0" marginwidth="0"
-                            scrolling="no">Loading…</iframe>
-                    </div>
-                </div>
             </div>
         </section>
 
@@ -1026,12 +1017,16 @@
             hour12: false
           });
 
-          // Slot is busy if it's within 12 hours from now OR overlaps with a calendar event
+          // Slot is busy if it's in the past OR overlaps with a calendar event
           const now = new Date();
           const limitTime = new Date(now.getTime() + 12 * 60 * 60 * 1000);
-          const isBusy = (slotDateUTC <= limitTime) || busyEvents.some(event => {
-            return slotDateUTC < event.end && slotEndUTC > event.start;
-          });
+          let isBusy = (slotDateUTC < now);
+          if (isToday(date) && slotDateUTC <= limitTime) {
+            isBusy = true;
+          }
+          if (busyEvents.some(event => slotDateUTC < event.end && slotEndUTC > event.start)) {
+            isBusy = true;
+          }
 
           slots.push({ timeLabel, isBusy });
         }
