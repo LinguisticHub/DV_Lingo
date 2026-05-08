@@ -629,12 +629,19 @@
 
       updateCalendar();
 
+      let apiInitAttempts = 0;
       function tryInitCalendarApis() {
         if (typeof gapi !== 'undefined' && typeof google !== 'undefined') {
           gapiLoaded();
           gisLoaded();
         } else {
-          setTimeout(tryInitCalendarApis, 500);
+          apiInitAttempts++;
+          if (apiInitAttempts > 10) { // 5 seconds
+            console.warn("Google Calendar APIs failed to load. Falling back to ICS.");
+            fetchCalendarDataICS();
+          } else {
+            setTimeout(tryInitCalendarApis, 500);
+          }
         }
       }
       tryInitCalendarApis();
@@ -702,7 +709,9 @@
         // but user specifically asked for "Client ID" flow.
         tokenClient.callback = async (resp) => {
           if (resp.error !== undefined) {
-            throw (resp);
+            console.warn("Calendar API Error:", resp.error, "Falling back to ICS.");
+            fetchCalendarDataICS();
+            return;
           }
           await listUpcomingEvents();
         };
