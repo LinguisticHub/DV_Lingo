@@ -168,12 +168,15 @@
                 <h1>Cancel an existing class</h1>
                 <hr class="divider bg-danger">
                 <div class="row justify-content-center offset-top-66">
-                    <div class="col-12"
-                        style="overflow: hidden; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); margin-bottom: 100px;">
-                        <iframe
-                            src="https://docs.google.com/forms/d/e/1FAIpQLSfyQ_APdatyfIHT8hKJsTpb5g5HfeUfdWTMNEFXoXbUz2QgDw/viewform?embedded=true"
-                            width="100%" height="1450" frameborder="0" marginheight="0" marginwidth="0"
-                            scrolling="no">Loading…</iframe>
+                    <div class="col-12" id="user-classes-container" style="display: none;">
+                        <p class="text-muted offset-bottom-20" style="font-size:18px;">Please select the class you wish to cancel.</p>
+                        <div class="row justify-content-center" id="classes-list">
+                            <!-- Populated via JS -->
+                        </div>
+                    </div>
+                    <div class="col-12 text-center" id="not-logged-in-message">
+                        <span class="mdi mdi-account-alert text-danger" style="font-size: 60px;"></span>
+                        <p class="offset-top-20" style="font-size: 18px; color: #666;">Please sign in first (top right corner) or book a class to view your schedule.</p>
                     </div>
                 </div>
             </div>
@@ -209,9 +212,231 @@
                 </div>
             </div>
         </footer>
-    </div>
+    <style>
+        .selectable-class-box {
+            cursor: pointer;
+            transition: all 0.2s ease-in-out !important;
+        }
+        .selectable-class-box:hover {
+            box-shadow: 0 8px 25px rgba(208, 25, 25, 0.2) !important;
+            transform: translateY(-3px);
+            border-color: #d01919 !important;
+        }
+    </style>
     <script src="js/core.min.js"></script>
     <script src="js/script.js"></script>
+    <script>
+        function selectClassBox(el, finalDate, finalTime) {
+            const confirmMsg = `Are you sure you want to cancel the class on ${finalDate} at ${finalTime}?`;
+            if (confirm(confirmMsg)) {
+                const globalUser = localStorage.getItem('dv_user');
+                const user = globalUser ? JSON.parse(globalUser) : { name: 'Unknown User', email: 'unknown@example.com' };
+                const userName = user.given_name ? (user.given_name + ' ' + (user.family_name || '')).trim() : (user.name || 'Unknown User');
+                
+                let currentTeacher = 'DV_Lingo'; // Default fallback
+                const pathParts = window.location.pathname.split('/');
+                if (pathParts.length > 1) {
+                    const fileIndex = pathParts.findIndex(p => p.includes('.html'));
+                    if (fileIndex > 0) {
+                        currentTeacher = pathParts[fileIndex - 1];
+                    } else {
+                        currentTeacher = pathParts[pathParts.length - 2] || pathParts[pathParts.length - 1];
+                    }
+                }
+
+                const tzOffsetMin = new Date().getTimezoneOffset();
+                const tzOffsetHours = -(tzOffsetMin / 60);
+                const tzFormat = (tzOffsetHours >= 0 ? '+' : '') + tzOffsetHours + ':00';
+                const visitorTz = (Intl.DateTimeFormat().resolvedOptions().timeZone || 'Desconocida') + ' (UTC ' + tzFormat + ')';
+
+                const payload = {
+                    fecha_hora_original: finalDate + " at " + finalTime,
+                    fecha_hora_nueva: "CANCELLED",
+                    zona_horaria_visitante: visitorTz,
+                    nombre_usuario: userName,
+                    email_usuario: user.email || 'unknown@example.com',
+                    nombre_repositorio: currentTeacher
+                };
+                
+                fetch('https://hooks.zapier.com/hooks/catch/17528811/upj32vm/', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                }).then(res => {
+                    alert('Cancellation registered successfully. Thank you!');
+                    window.location.reload();
+                }).catch(err => {
+                    alert('Error connecting to server: ' + err.message);
+                });
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const globalUser = localStorage.getItem('dv_user');
+            const container = document.getElementById('user-classes-container');
+            const list = document.getElementById('classes-list');
+            const notLoggedIn = document.getElementById('not-logged-in-message');
+
+            if (globalUser) {
+                const user = JSON.parse(globalUser);
+                container.style.display = 'block';
+                notLoggedIn.style.display = 'none';
+                
+                let currentTeacher = 'DV_Lingo'; // Default fallback
+                const pathParts = window.location.pathname.split('/');
+                if (pathParts.length > 1) {
+                    const fileIndex = pathParts.findIndex(p => p.includes('.html'));
+                    if (fileIndex > 0) {
+                        currentTeacher = pathParts[fileIndex - 1];
+                    } else {
+                        currentTeacher = pathParts[pathParts.length - 2] || pathParts[pathParts.length - 1];
+                    }
+                }
+
+                fetch(`https://script.google.com/macros/s/AKfycbzyGbrU5Rrj7ix--DQ6PD1wiS2xGNoYTVnim_Z4OSEgDdca6WwfVedVPneeDx1W_gK3/exec?email=${encodeURIComponent(user.email)}&teacher=${encodeURIComponent(currentTeacher)}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        list.innerHTML = '';
+                        
+                        if (!data || data.length === 0) {
+                            list.innerHTML = `
+                                <div class="col-12 offset-top-20 text-center">
+                                    <span class="mdi mdi-calendar-blank text-gray-light" style="font-size: 60px;"></span>
+                                    <p class="offset-top-20" style="font-size: 18px; color: #666;">There are no classes programmed.</p>
+                                </div>
+                            `;
+                            return;
+                        }
+                
+                        let classesAdded = 0;
+                        data.forEach(item => {
+                            let detailsHtml = '';
+                            
+                            const keys = Object.keys(item);
+                            const getVal = (search) => {
+                                const k = keys.find(k => k.toLowerCase().includes(search));
+                                return k ? String(item[k]).trim() : '';
+                            };
+                            
+                            const rawDate = getVal('date');
+                            const rawHour = getVal('hour') || getVal('time');
+                            const rawTz = getVal('timezone');
+                            var rawDuration = getVal('minute') || getVal('duration') || getVal('minutes');
+                            
+                            if (rawDate && rawDate.includes('T') && new Date(rawDate).getTime() < Date.now()) return;
+
+                            let dateRendered = false;
+                            let finalDate = "N/A";
+                            let finalTime = "N/A";
+
+                            if (rawDate && rawHour && rawDate.indexOf('T') === -1) {
+                                let isoDate = rawDate;
+                                if (rawDate.includes('-')) {
+                                    const p = rawDate.split('-');
+                                    if (p[2] && p[2].length === 4) isoDate = `${p[2]}-${p[1]}-${p[0]}`;
+                                } else if (rawDate.includes('/')) {
+                                    const p = rawDate.split('/');
+                                    if (p[2] && p[2].length === 4) isoDate = `${p[2]}-${p[1]}-${p[0]}`;
+                                }
+                                
+                                let rawTime = rawHour.toUpperCase().trim();
+                                let isoTime = rawHour;
+                                if (rawTime.includes('PM') || rawTime.includes('AM')) {
+                                    let parts = rawTime.replace('PM','').replace('AM','').trim().split(':');
+                                    let hours = parseInt(parts[0]);
+                                    let mins = parts[1] || '00';
+                                    if (rawTime.includes('PM') && hours < 12) hours += 12;
+                                    if (rawTime.includes('AM') && hours === 12) hours = 0;
+                                    isoTime = hours.toString().padStart(2, '0') + ':' + mins + ':00';
+                                } else {
+                                    if (isoTime.length === 5) isoTime += ':00';
+                                    else if (isoTime.length === 4) isoTime = '0' + isoTime + ':00';
+                                }
+                                
+                                const tzLower = (rawTz || 'indonesia').toLowerCase();
+                                let iana = 'Asia/Jakarta';
+                                if (tzLower.includes('spain') || tzLower.includes('madrid')) iana = 'Europe/Madrid';
+                                else if (tzLower.includes('kuala') || tzLower.includes('bali')) iana = 'Asia/Kuala_Lumpur';
+                                else if (tzLower.includes('york') || tzLower.includes('usa')) iana = 'America/New_York';
+                                
+                                try {
+                                    const dummyDate = new Date(`${isoDate}T12:00:00Z`);
+                                    let offset = '+00:00';
+                                    const parts = new Intl.DateTimeFormat('en-US', { timeZone: iana, timeZoneName: 'shortOffset' }).formatToParts(dummyDate);
+                                    const tzPart = parts.find(p => p.type === 'timeZoneName');
+                                    if (tzPart && tzPart.value) {
+                                        let val = tzPart.value.replace('GMT', '').replace('UTC', '');
+                                        if (!val) val = '+00:00';
+                                        else if (val.indexOf(':') === -1) val += ':00'; 
+                                        if (val.length === 5 && val.indexOf('+') === 0) val = val.replace('+', '+0'); 
+                                        if (val.length === 5 && val.indexOf('-') === 0) val = val.replace('-', '-0'); 
+                                        offset = val;
+                                    }
+                                    
+                                    const localD = new Date(`${isoDate}T${isoTime}${offset}`);
+                                    if (!isNaN(localD.getTime())) {
+                                        if (localD.getTime() < Date.now()) return; // skip past classes
+                                        finalDate = localD.toLocaleDateString('en-US', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+                                        finalTime = localD.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+                                        
+                                        detailsHtml += `<p style="margin-bottom: 8px; font-size: 15px; color: #555;"><strong style="color:#d01919;">Date:</strong> ${finalDate}</p>
+                                                        <p style="margin-bottom: ${rawDuration ? '8px' : '12px'}; font-size: 15px; color: #555;"><strong style="color:#d01919;">Time:</strong> ${finalTime}</p>`;
+                                        
+                                        if (rawDuration) {
+                                            detailsHtml += `<p style="margin-bottom: 12px; font-size: 15px; color: #555;"><strong style="color:#d01919;">Duration:</strong> ${rawDuration} minutes</p>`;
+                                        }
+
+                                        dateRendered = true;
+                                    }
+                                } catch(e) { console.warn("Timezone parsing failed", e); }
+                            }
+
+                            keys.forEach(key => {
+                                const kl = key.toLowerCase().trim();
+                                if (['name', 'teacher', 'email', 'emailaddress', 'timestamp', 'email address'].includes(kl)) return;
+                                if (dateRendered && (kl.includes('date') || kl.includes('hour') || kl.includes('time') || kl.includes('timezone') || kl.includes('minute') || kl.includes('duration'))) return;
+                                
+                                if (item[key]) {
+                                    let val = String(item[key]);
+                                    detailsHtml += `<p style="margin-bottom: 8px; font-size: 15px; color: #555;"><strong style="color:#333; text-transform: capitalize;">${key.replace(/_/g, ' ')}:</strong> ${val}</p>`;
+                                }
+                            });
+
+                            const colHtml = `
+                                <div class="col-md-6 col-lg-3" style="display: flex; padding-bottom: 30px;">
+                                    <div class="box-icon box-icon-bordered selectable-class-box" onclick="selectClassBox(this, '${finalDate}', '${finalTime}')" style="padding: 15px 20px; text-align: left; width: 100%; flex: 1; max-width: none; display: flex; flex-direction: column; border-radius: 10px; background: #fff; box-shadow: 0 4px 15px rgba(0,0,0,0.03);">
+                                        <div style="flex-grow: 1; pointer-events: none;">
+                                            ${detailsHtml}
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                            list.innerHTML += colHtml;
+                            classesAdded++;
+                        });
+
+                        if (classesAdded === 0) {
+                            list.innerHTML = `
+                                <div class="col-12 offset-top-20 text-center">
+                                    <span class="mdi mdi-calendar-blank text-gray-light" style="font-size: 60px;"></span>
+                                    <p class="offset-top-20" style="font-size: 18px; color: #666;">There are no future classes programmed.</p>
+                                </div>
+                            `;
+                        }
+                    })
+                    .catch(err => {
+                        list.innerHTML = `
+                            <div class="col-12 text-center text-danger offset-top-20">
+                                <p>Error loading classes. Please try again later.</p>
+                            </div>
+                        `;
+                    });
+            } else {
+                container.style.display = 'none';
+                notLoggedIn.style.display = 'block';
+            }
+        });
+    </script>
 </body>
 
 </html>
