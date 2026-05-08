@@ -1072,6 +1072,9 @@
           
           fetch('https://hooks.zapier.com/hooks/catch/17528811/upj32vm/', {
               method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json'
+              },
               body: JSON.stringify(payload)
           }).then(res => {
               alert('¡Modificación solicitada correctamente! Gracias.');
