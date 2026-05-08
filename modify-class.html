@@ -572,12 +572,13 @@
                                     list.innerHTML = `
                                         <div class="col-12 offset-top-20 text-center">
                                             <span class="mdi mdi-calendar-blank text-gray-light" style="font-size: 60px;"></span>
-                                            <p class="offset-top-20" style="font-size: 18px; color: #666;">We couldn't find any scheduled classes for <strong>${currentTeacher}</strong> under the email <strong>${user.email}</strong>.</p>
+                                            <p class="offset-top-20" style="font-size: 18px; color: #666;">There are no classes programmed.</p>
                                         </div>
                                     `;
                                     return;
                                 }
                         
+                        let classesAdded = 0;
                         data.forEach(item => {
                             let detailsHtml = '';
                             
@@ -686,7 +687,17 @@
                                 </div>
                             `;
                             list.innerHTML += colHtml;
+                            classesAdded++;
                         });
+
+                        if (classesAdded === 0) {
+                            list.innerHTML = `
+                                <div class="col-12 offset-top-20 text-center">
+                                    <span class="mdi mdi-calendar-blank text-gray-light" style="font-size: 60px;"></span>
+                                    <p class="offset-top-20" style="font-size: 18px; color: #666;">There are no classes programmed.</p>
+                                </div>
+                            `;
+                        }
                     })
                     .catch(err => {
                         console.error("Error loading classes:", err);
