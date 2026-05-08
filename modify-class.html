@@ -154,11 +154,15 @@
       grid-template-columns: repeat(7, 1fr);
       gap: 0;
       border-top: 1px solid #eee;
+      align-items: stretch !important;
     }
 
     .day-column {
       border-left: 1px solid #eee;
       padding-bottom: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
     }
 
     .day-column:last-child {
