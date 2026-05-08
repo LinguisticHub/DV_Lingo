@@ -831,11 +831,13 @@
       }
 
       try {
-        // Since it's a static site, we prompt for token if needed
-        // In a real scenario for Diva (tutor), she would login.
-        // For students, we usually use an API Key if public, 
-        // but user specifically asked for "Client ID" flow.
+        let tokenTimeout = setTimeout(() => {
+          console.warn("Google Calendar API token request timed out. Falling back to ICS.");
+          fetchCalendarDataICS();
+        }, 2000);
+
         tokenClient.callback = async (resp) => {
+          clearTimeout(tokenTimeout);
           if (resp.error !== undefined) {
             console.warn("Calendar API Error:", resp.error, "Falling back to ICS.");
             fetchCalendarDataICS();
