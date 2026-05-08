@@ -744,7 +744,9 @@
 
     async function fetchCalendarDataICS() {
       try {
-        const response = await fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent(ICS_URL)}`);
+        const cacheBuster = Math.floor(Date.now() / 120000);
+        const urlWithBuster = `${ICS_URL}?nocache=${cacheBuster}`;
+        const response = await fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent(urlWithBuster)}`);
         const icsData = await response.text();
         parseICS(icsData);
         updateCalendar();
