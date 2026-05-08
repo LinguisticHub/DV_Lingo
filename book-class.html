@@ -746,7 +746,7 @@
       try {
         const cacheBuster = Math.floor(Date.now() / 120000);
         const urlWithBuster = `${ICS_URL}?nocache=${cacheBuster}`;
-        const response = await fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent(urlWithBuster)}`);
+        const response = await fetch(`https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(urlWithBuster)}`);
         const icsData = await response.text();
         parseICS(icsData);
         updateCalendar();
